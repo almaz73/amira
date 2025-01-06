@@ -1,42 +1,13 @@
 import pygame
 import sys
 import words
+import canvas_mod
 
-
-pygame.init()
 clock = pygame.time.Clock()
-pygame.display.set_caption('Запоминаем 1000 часто используемых английских слов')  # заголовок
-img = pygame.image.load('pyGame/icon.png')  # рисунок иконки
-pygame.display.set_icon(img)  # закрепляем иконку
-screen = pygame.display.set_mode((800, 500))  # размеры игрового поля
-font = pygame.font.SysFont('comicsansms', 32)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-BLUE = (0, 0, 100)
-follow = font.render('      Найди пару      ', 1, 'wheat', (0, 110, 0))
+dirty = True # нужно обновлять список
 
-screen.blit(follow, (150,20))
-
-
-
-
-word4 = words.getWords()
-# print(word4)
-
-
-# расставит 4 пары слов
-def setPlace(words):
-    eng=[]
-    ru=[]
-    # print(len(words))
-    for i in words:
-        eng.append(font.render('    '+i[0]+'  ', 1, GREEN, BLUE))
-        ru.append(font.render( i[1]+'  ', 1, GREEN, BLUE))
-    for r in range(len(words)):
-        screen.blit(eng[r], (250-eng[r].get_width(),100+r*60))
-        screen.blit(ru[r], (320,100+r*60))
-        # тут сохраним координаты слов, чтобы понять что нажато
-
+word4 = words.getWords() # получим новый список
+canvas_mod.setPlace(word4) # отрисуем
 
 while True:
     for event in pygame.event.get():
@@ -45,13 +16,18 @@ while True:
             pygame.quit()
             sys.exit() 
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            print("Нажата кнопка: ", event.button)
-            print("Позиция мыши: ", event.pos)  
-        
+            if event.button == 1:
+                # print("Позиция мыши: ", event.pos)
+                canvas_mod.collizia(event.pos)
+            dirty = True 
+      
     
-    setPlace(word4)
+    if dirty:
+        # canvas_mod.setPlace(word4)
+        dirty = False
+
     pygame.display.flip()
-    clock.tick(1)
+    clock.tick(5)
     
     #time.sleep(2)
 
