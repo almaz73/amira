@@ -34,10 +34,6 @@ def setPlace(words):
     for i in words:
         eng.append(font.render('    '+i[0]+'  ', 1, GREEN, BLUE))
         ru.append(font.render( i[1]+'  ', 1, GREEN, BLUE))
-
-    print(' >> >> >> eng', eng)
-
-
     for r in range(len(words)):
         point = {'x1':300-eng[r].get_width(), 
                  'w1': 300,
@@ -114,14 +110,12 @@ def highlight(place):
 
     if col == oldCol and oldR:
         pygame.draw.rect(screen,0, oldR, width=5)
-        print('HRHRH')
         oldR = None
         arrResults = [place]
 
     if not place:
         return False  
    
-    print(' > > > > >>>row', row)
     r = None
     if col == 1 and eng[row]:
         x = eng[row].get_width()        
@@ -150,15 +144,21 @@ def victoryCheck():
         # print(':::: victoryCheck arrFalse', arrFalse)
         global eng
         global ru
-        global coor
-        result = []
+        global coor        
         coor=[]
         eng=[]
         ru=[]
+
+        result1 = []
+        result2 = []
         for i in arrTrue:
             if i not in arrFalse:
-                result.append(i)
-        return {'ready':result, 'repeat':arrFalse}
+                if i not in result1:
+                    result1.append(i)
+        for i in arrFalse:
+            if i not in result2:
+                result2.append(i)
+        return {'ready':result1, 'repeat':result2}
 
 
 def collizia (pos):
@@ -186,5 +186,5 @@ def showReport(res):
     clearScreen()
     
 
-    follow = font.render('      Отчет      ', 1, 'wheat', (0, 110, 0))
+    follow = font.render('Осталось: ' + str(res['Осталось']), 1, 'wheat', 0)
     screen.blit(follow, (150,120))    

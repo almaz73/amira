@@ -8,8 +8,6 @@ clock = pygame.time.Clock()
 dirty = True # нужно обновлять список
 
 word4 = words.getWords() # получим новый список
-print(': : : : : word4', word4)
-# startNewGame = word4[1] 
 
 canvas_mod.setPlace(word4[0]) # отрисуем
 
@@ -20,6 +18,7 @@ def next(res):
     # print(':::: КОНЕЦ ::::: ', res)
     # print(' > > > word4[1]', word4[1])
     report = words.backAfterFinish(res)
+    print('   ==== report  ==== ', report)
     canvas_mod.showReport(report)    
     word5 = words.getWords() # получим новый список
     pygame.display.flip()
