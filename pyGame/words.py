@@ -7,7 +7,7 @@ import random
 # сохранение переменной
 data = {}
 data = {'learned':[1,2,3], 'needRepeat':[]}
-complexity = 3 # сложность (5 пар слов в ряд)
+complexity = 2 # сложность (5 пар слов в ряд)
 remainingWords = []
 
 
@@ -49,5 +49,5 @@ def getWords():
     return [arr, chosenIndex]
 
 
-def backAfterFinish():
-    print('e= == == == == == w-d-d-d-ewe')
+def backAfterFinish(res):
+    print('e= == == == == == w-d-d-d-ewe', res)

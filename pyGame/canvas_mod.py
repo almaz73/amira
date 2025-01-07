@@ -63,7 +63,6 @@ def isFinishLevel():
     for a in eng:
         if a != None:
             isFull = True
-    print('>>isFull', isFull)
     return isFull
 
 
@@ -104,7 +103,9 @@ def highlight(place):
      
     global oldR
     global oldCol
-    global arrResults   
+    global arrResults 
+
+    
 
     arrResults.append(place)      
 
@@ -120,6 +121,7 @@ def highlight(place):
     if not place:
         return False  
    
+    print(' > > > > >>>row', row)
     r = None
     if col == 1 and eng[row]:
         x = eng[row].get_width()        
@@ -148,7 +150,9 @@ def victoryCheck():
         # print(':::: victoryCheck arrFalse', arrFalse)
         global eng
         global ru
+        global coor
         result = []
+        coor=[]
         eng=[]
         ru=[]
         for i in arrTrue:
@@ -172,5 +176,15 @@ def collizia (pos):
     print(element)
     return highlight(element)
     # return element
-         
+
+def clearScreen():
+    r = pygame.Rect(0, 100, 780, 500)
+    pygame.draw.rect(screen, 0, r)
+
+def showReport(res):
+    print ('res res res res res res res res res', res)   
+    clearScreen()
     
+
+    follow = font.render('      Отчет      ', 1, 'wheat', (0, 110, 0))
+    screen.blit(follow, (150,120))    

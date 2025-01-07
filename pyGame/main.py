@@ -2,6 +2,7 @@ import pygame
 import sys
 import words
 import canvas_mod
+import time
 
 clock = pygame.time.Clock()
 dirty = True # нужно обновлять список
@@ -16,11 +17,15 @@ canvas_mod.setPlace(word4[0]) # отрисуем
 def next(res):
     if not res:
         return False
-    print('93 КОНЕЦ 9939339: ', res)
-    print(' > > > word4[1]', word4[1])
-    words.backAfterFinish()
+    # print(':::: КОНЕЦ ::::: ', res)
+    # print(' > > > word4[1]', word4[1])
+    report = words.backAfterFinish(res)
+    canvas_mod.showReport(report)    
     word5 = words.getWords() # получим новый список
-    print(': : : : : word5', word5)
+    pygame.display.flip()
+    time.sleep(1)
+    # print(': : : : : word5', word5)
+    canvas_mod.clearScreen()
     canvas_mod.setPlace(word5[0]) # отрисуем
 
 
@@ -39,11 +44,10 @@ while True:
     
     if dirty:
         dirty = False
+        pygame.display.flip()
 
-    pygame.display.flip()
-    clock.tick(5)
+clock.tick(5)
     
-    #time.sleep(2)
 
 
 
