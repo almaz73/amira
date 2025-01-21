@@ -1,0 +1,7 @@
+bot/env.py
+.idea/amira.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+bot/__pycache__/env.cpython-313.pyc
+bot/dataShow.py
