@@ -5,3 +5,9 @@ bot/env.py
 .idea/vcs.xml
 bot/__pycache__/env.cpython-313.pyc
 bot/dataShow.py
+bot/bot2/env.py
+bot3_wb/env.py
+bot/bot2/__pycache__/env.cpython-313.pyc
+bot/bot2/__pycache__/wb.cpython-313.pyc
+bot3_wb/__pycache__/env.cpython-313.pyc
+bot3_wb/__pycache__/wb.cpython-313.pyc
