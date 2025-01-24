@@ -16,48 +16,40 @@ def getSimpleDate(text):
 
 
 def sendMessageToTelegram(text):
-    text += ':::::::::::::::::::::'
+    # text += ':::::::::::::::::::::'
     urlTG = 'https://api.telegram.org/bot'+TG_KEY+'/sendMessage?chat_id='+TG_CHAT+'&parse_mode=HTML&text='+text
     resp = requests.get(urlTG)
     if resp.status_code == 200:
-        print ('Телеграмм отпрален. Всё OK!')
+        print ('Телеграмм отправлен. Всё OK!')
 
 def prepare_items(response):
     text = ''
     for i in response:    
         if i['allowUnload'] and i['coefficient']>-1 and i['boxTypeName'] == 'Короба':
-        # if i['coefficient']>-1 and i['boxTypeName'] == 'Короба':  
-            print(i)          
             if i['coefficient'] == 0: 
                 dt = getSimpleDate(i['date'])
-                print('dt=', dt)
-                text += dt +'  '+ i['warehouseName']+'  '+ 'бесплатно'+'\n\n'
+                text += dt +'  \n\n'+ i['warehouseName']+'  '+ 'Бесплатно '+'\n\n 🌷🌷🌷'
                 print(i['date'] , i['warehouseName'],  'Бесплатно')
-            else: print(i['date'] , i['warehouseName'], 'коэф = ', i['coefficient'])
+            else: 
+                text += dt +'  \n\n'+ i['warehouseName']+'  '+ '✕'+i['coefficient']+'  😫🌷😫'
+                print(i['date'] , i['warehouseName'], 'коэф = ', i['coefficient'])
     if not text:
-        text = 'Нет свободных слотов 🤔 😫 🌷 😡'
+        text = 'Нет свободных слотов 🤔😡'
     sendMessageToTelegram(text)
 
-
+#  😫 🌷 😡
 
 # Склад 
 # Коэффициенты приёмки
-url = 'https://supplies-api.wildberries.ru/api/v1/acceptance/coefficients'
-
-
+url = 'http://supplies-api.wildberries.ru/api/v1/acceptance/coefficients'
 
 # Список складов
 # url = "https://supplies-api.wildberries.ru/api/v1/warehouses"
 
-headers = {
-    'Authorization': f'Bearer {API_KEY}',
-    'Content-Type': 'application/json'
-}
+headers = {'Authorization': f'Bearer {API_KEY}','Content-Type': 'application/json'}
 
 # Определите параметры запроса 
 params = {
-    'dateFrom': '2025-01-18T00:00:00Z',  
-    'dateTo': '2025-01-18T00:00:00Z',    
     'warehouseIDs': [117986]             # ID склада, (117986 - Казань)
 }
 

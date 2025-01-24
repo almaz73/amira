@@ -17,12 +17,19 @@ print('_1=', new_date)
 
 text = "2025-02-01T00:00:00Z"
 
+days = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс']
 def getSimpleDate(text):
     print('DEF text', text)
     date_object = datetime.strptime(text, "%Y-%m-%dT%H:%M:%SZ")
-    formatted_date = date_object.strftime("%d %B %Y")
+   
+    day = date_object.weekday()
+    formatted_date = date_object.strftime("%d.%m.%y") +' ['+days[day]+']'
+    
     print('DEF  formatted_date = ', formatted_date)
+    print('day', days[day])
     return formatted_date
+
+
 
 
 # Parse the text into a datetime object
