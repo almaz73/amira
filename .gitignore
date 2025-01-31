@@ -11,3 +11,4 @@ bot/bot2/__pycache__/env.cpython-313.pyc
 bot/bot2/__pycache__/wb.cpython-313.pyc
 bot3_wb/__pycache__/env.cpython-313.pyc
 bot3_wb/__pycache__/wb.cpython-313.pyc
+bot/bot3/env.py
