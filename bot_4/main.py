@@ -1,0 +1,115 @@
+import asyncio
+import logging
+import sys
+from os import getenv
+
+from aiogram import F
+from aiogram import Bot, Dispatcher, html
+from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
+from aiogram.filters import CommandStart
+from aiogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
+
+
+import env
+import whorehouse.wb as wb
+import utils.wb_analiz as wb_analiz
+
+
+
+TOKEN = env.TELEGRAM_TOKEN
+
+# All handlers should be attached to the Router (or Dispatcher)
+dp = Dispatcher()
+
+
+
+
+@dp.message(CommandStart())
+async def command_start_handler(message: Message) -> None:
+    """
+    This handler receives messages with `/start` command
+    """
+    await message.answer(f"Hello, {html.bold(message.from_user.full_name)}!")
+
+
+@dp.message()
+@dp.message()
+async def echo_handler(message: Message) -> None:
+    try:
+        begin = message.text.upper().find('WB')
+        help = message.text.upper().find('HELP')
+        ost = message.text.upper().find('OST')
+        if begin>-1:
+            ans = wb.getWB()        
+            await message.answer(ans)
+        elif help>-1:
+            await message.answer(f"wb - склады\n ost- Остатки\n ost463- Остатки по артикулу")
+        elif ost>-1:
+            articulText = message.text[3:]
+            if articulText == '0':
+                 print (' 84848448 СОЗДАВАТЬ БУДЕТ')
+
+            elif not articulText:
+                await message.answer(
+                        text='Выбери или пиши ost463',
+                        reply_markup=keyboard
+                ) 
+            # if not taskId: 
+            #     taskId = wb_ost.startOst()
+            #     print ('taskId', taskId)
+            #     await message.answer(' 🌷 Отчет создан, можно делать анализ')
+            # else:
+            #     message.answer(' 🌷 на анализ')          
+            #     print(' На анализ')                  
+            #     ans = wb_ost.getOst(taskId, message.text[3:])
+            #     await message.answer(ans[4000:])
+
+                   
+        else: await message.send_copy(chat_id=message.chat.id)
+    except TypeError:
+        await message.answer("Nice try!")
+
+
+# Создаем объекты инлайн-кнопок
+bt1 = InlineKeyboardButton(text='262',callback_data='262')
+bt2 = InlineKeyboardButton(text='382',callback_data='382')
+bt3 = InlineKeyboardButton(text='463',callback_data='463')
+bt4 = InlineKeyboardButton(text='542',callback_data='542')
+bt5 = InlineKeyboardButton(text='567',callback_data='567')
+bt6 = InlineKeyboardButton(text='755',callback_data='755')
+
+# Создаем объект инлайн-клавиатуры
+keyboard = InlineKeyboardMarkup(
+    inline_keyboard=[[bt1, bt2, bt3, bt4, bt5, bt6]]
+)
+
+
+@dp.callback_query(F.data.in_(['262','382','463','542','567','755']))
+async def process_buttons_press(callback: CallbackQuery):    
+    # print ('callback', callback.message.text)
+    print ('callback', callback.data)
+    ans = wb_analiz.getAnaliz('463')
+
+    await callback.message.edit_text(ans)
+    await callback.answer()
+
+    # await callback_answer.text("Что-то пошло не так. Попробуйте позже")
+    # await message.answer('99999999999999', '333')
+    
+    # await message.answer(f'Ты нажал {callback.data}')
+    
+
+
+
+async def main() -> None:
+    # Initialize Bot instance with default bot properties which will be passed to all API calls
+    bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+
+    # And the run events dispatching
+    await dp.start_polling(bot)
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+    asyncio.run(main())

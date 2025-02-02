@@ -12,3 +12,9 @@ bot/bot2/__pycache__/wb.cpython-313.pyc
 bot3_wb/__pycache__/env.cpython-313.pyc
 bot3_wb/__pycache__/wb.cpython-313.pyc
 bot/bot3/env.py
+bot_4/env.py
+wb_ost.json
+wb_File.pickle
+wb_File.json
+wb_File.bin
+data.pickle

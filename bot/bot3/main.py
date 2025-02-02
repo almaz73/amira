@@ -1,7 +1,7 @@
 import asyncio
 import logging
 import sys
-from os import getenv
+import time
 
 from aiogram import Bot, Dispatcher, html
 from aiogram.client.default import DefaultBotProperties
@@ -11,6 +11,7 @@ from aiogram.types import Message
 
 import env
 import wb
+import wb_ost
 
 
 TOKEN = env.TELEGRAM_TOKEN
@@ -26,18 +27,33 @@ async def command_start_handler(message: Message) -> None:
     """
     await message.answer(f"Hello, {html.bold(message.from_user.full_name)}!")
 
+global taskId
 
 @dp.message()
 async def echo_handler(message: Message) -> None:
     try:
         begin = message.text.upper().find('WB')
+        help = message.text.upper().find('HELP')
+        ost = message.text.upper().find('OST')
         if begin>-1:
-            # Send a copy of the received message
             ans = wb.getWB()        
             await message.answer(ans)
+        elif help>-1:
+            await message.answer(f"wb - склады\n ost- Остатки\n ost463- Остатки по артикулу")
+        elif ost>-1:
+            print('taskId=', taskId)
+            if not taskId: 
+                taskId = wb_ost.startOst()
+                print ('taskId', taskId)
+                await message.answer(' 🌷 Отчет создан, можно делать анализ')
+            else:
+                message.answer(' 🌷 на анализ')          
+                print(' На анализ')                  
+                ans = wb_ost.getOst(taskId, message.text[3:])
+                await message.answer(ans[4000:])
+                   
         else: await message.send_copy(chat_id=message.chat.id)
     except TypeError:
-        # But not all the types is supported to be copied so need to handle it
         await message.answer("Nice try!")
 
 
