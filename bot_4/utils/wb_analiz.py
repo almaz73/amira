@@ -14,9 +14,7 @@ def startOst():
     return taskId
 
 def analizator(spisok, art):
-
     # lovaly_art = [ '262','382','463','542','567','755']
-    lovaly_art = ['463','382']
 
     danger =''
 
@@ -29,6 +27,7 @@ def analizator(spisok, art):
             return 'WB: Файл не найден'
     else : 
         saveRead.saveFile(spisok)
+        print('000art ::: ', art)
         for i in spisok:  
             found = False
 
@@ -37,19 +36,19 @@ def analizator(spisok, art):
                 if i['quantityWarehousesFull']<5:
                     found = True
 
-            if not len(art):
-                # ищем среди топ товаров
-                for art2 in lovaly_art:
-                    if i['vendorCode'].find(art2)>-1:
-                        if i['quantityWarehousesFull']<5:
-                            found = True
+            # if not len(art):
+            #     # ищем среди топ товаров
+            #     for art2 in lovaly_art:
+            #         if i['vendorCode'].find(art2)>-1:
+            #             if i['quantityWarehousesFull']<5:
+            #                 found = True
 
             if found:
-                txt = str(i['quantityWarehousesFull']) + '👉'+i['techSize']+ '✴' + i['vendorCode'] +'\n' 
+                txt = '▸'+str(i['quantityWarehousesFull']) + ' 👉 '+i['techSize']+ ' 🌻 ' + i['vendorCode'] +'\n' 
                 danger+=txt
 
     # print('danger:::', danger)
-    if not danger: danger='Не нейдено'
+    if not danger: danger=' 👻 Ничего не нейдено'
     return danger
 
 

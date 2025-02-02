@@ -23,7 +23,7 @@ import utils.wb_analiz as wb_analiz
 # print('zzz=', zzz)
 
 ans = wb_analiz.getAnaliz('')
-print('ans = ', ans)
+print(ans)
 
   
 # data = {

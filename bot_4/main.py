@@ -49,12 +49,17 @@ async def echo_handler(message: Message) -> None:
             articulText = message.text[3:]
             if articulText == '0':
                  print (' 84848448 СОЗДАВАТЬ БУДЕТ')
+                 wb_analiz.getAnaliz('0')
+                 await message.answer('Создан новый файл аналитики') 
 
             elif not articulText:
                 await message.answer(
                         text='Выбери или пиши ost463',
                         reply_markup=keyboard
-                ) 
+                )
+            else:
+                ans = wb_analiz.getAnaliz(articulText)
+                await message.answer(ans) 
             # if not taskId: 
             #     taskId = wb_ost.startOst()
             #     print ('taskId', taskId)
@@ -87,18 +92,11 @@ keyboard = InlineKeyboardMarkup(
 
 @dp.callback_query(F.data.in_(['262','382','463','542','567','755']))
 async def process_buttons_press(callback: CallbackQuery):    
-    # print ('callback', callback.message.text)
     print ('callback', callback.data)
-    ans = wb_analiz.getAnaliz('463')
+    ans = wb_analiz.getAnaliz(callback.data)
 
     await callback.message.edit_text(ans)
     await callback.answer()
-
-    # await callback_answer.text("Что-то пошло не так. Попробуйте позже")
-    # await message.answer('99999999999999', '333')
-    
-    # await message.answer(f'Ты нажал {callback.data}')
-    
 
 
 
