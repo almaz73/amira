@@ -14,6 +14,7 @@ from aiogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup, C
 import env
 import whorehouse.wb as wb
 import utils.wb_analiz as wb_analiz
+import utils.ghost as ghost
 
 
 
@@ -22,7 +23,12 @@ TOKEN = env.TELEGRAM_TOKEN
 # All handlers should be attached to the Router (or Dispatcher)
 dp = Dispatcher()
 
-
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
 
 
 @dp.message(CommandStart())
@@ -40,6 +46,12 @@ async def echo_handler(message: Message) -> None:
         begin = message.text.upper().find('WB')
         help = message.text.upper().find('HELP')
         ost = message.text.upper().find('OST')
+        game = message.text.upper().find('GAME')
+        if ghost.isStarted():
+            if not is_number(message.text): return ghost.end()                    
+            else: return await message.answer(ghost.ask(int(message.text)))
+        if game>-1: return await message.answer(ghost.start())
+
         if begin>-1:
             ans = wb.getWB()        
             await message.answer(ans)
@@ -57,18 +69,13 @@ async def echo_handler(message: Message) -> None:
                         text='Выбери или пиши ost463',
                         reply_markup=keyboard
                 )
+           
+            
             else:
                 ans = wb_analiz.getAnaliz(articulText)
                 await message.answer(ans) 
-            # if not taskId: 
-            #     taskId = wb_ost.startOst()
-            #     print ('taskId', taskId)
-            #     await message.answer(' 🌷 Отчет создан, можно делать анализ')
-            # else:
-            #     message.answer(' 🌷 на анализ')          
-            #     print(' На анализ')                  
-            #     ans = wb_ost.getOst(taskId, message.text[3:])
-            #     await message.answer(ans[4000:])
+                
+
 
                    
         else: await message.send_copy(chat_id=message.chat.id)
