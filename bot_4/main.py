@@ -12,6 +12,7 @@ from aiogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup, C
 
 
 import env
+import keyboards as kb
 import whorehouse.wb as wb
 import utils.wb_analiz as wb_analiz
 import utils.ghost as ghost
@@ -37,12 +38,42 @@ async def command_start_handler(message: Message) -> None:
     """
     This handler receives messages with `/start` command
     """
-    await message.answer(f"Hello, {html.bold(message.from_user.full_name)}!")
+    await message.answer(f"Hello, {html.bold(message.from_user.full_name)}!", reply_markup=kb.startMenu)
 
 
-@dp.message()
+
 @dp.message()
 async def echo_handler(message: Message) -> None:
+    if message.text == '🐸 Меню': return await message.answer('Выберите действие', reply_markup=kb.subMenu)
+    if message.text == '↩ Назад': return await message.answer('Выберите действие', reply_markup=kb.startMenu)
+    if message.text == '✅ Цитата': 
+        answer = citation.nextCitation()
+        trlink = InlineKeyboardMarkup(
+            inline_keyboard= [[
+                InlineKeyboardButton(
+                    text='Перевод', 
+                    url=f"https://translate.google.ru/?sl=en&tl=ru&text={answer}&op=translate")
+            ]]
+        ) 
+        return await message.answer(answer, reply_markup=trlink)    
+    if message.text == '🔧 Настройки': return await message.answer("""░░░░░░░░░░░░░░░░░
+▄▄▄▄░░░░▄▄▄░░░░▄▄▄░
+███▀░░▄█████▄▄█████
+██░░░██████████████
+██░░░██████████████
+██░░░▀█████████████
+██▄░░░░▀██████████▀
+████░░░░░▀██████▀░░
+░░░░░░░░░░░▀██▀░░░░
+░░░░░░░░▄▄░░░░░░░░░
+█░███▀▄█▀▀█▄░▀██▀░▀
+█▄█▀░▄█░░░░█▄░██░░░
+░█░░░██░░░░██░██░░░
+░█░░░░█▄░░▄█░░██░░░
+███▄░░░▀██▀░░░░▀███
+░░░░░░░░░░░░░░░░░░░""")
+    if message.text == '☸ Wildberies': return await message.answer(citation.nextCitation())
+    
     try:
         begin = message.text.upper().find('WB')
         help = message.text.upper().find('HELP')

@@ -14,5 +14,3 @@ def nextCitation():
   author = data['quote']['author']
   return (f'{pic0} {pic0} {pic0} \n{text} \n{pic} author: {author} ')
 
-
-print(nextCitation())

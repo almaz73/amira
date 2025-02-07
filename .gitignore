@@ -7,10 +7,8 @@ bot/__pycache__
 bot/dataShow.py
 bot/bot2/env.py
 bot3_wb/env.py
-bot/bot2/__pycache__
-bot/bot2/__pycache__
-bot3_wb/__pycache__
-bot3_wb/__pycache__
+bot/bot2/__pycache__/
+bot3_wb/__pycache__/
 bot/bot3/env.py
 bot_4/env.py
 wb_ost.json
@@ -23,9 +21,10 @@ sqlite/ghost.py
 sqlite/main2.py
 sqlite/main5.py
 sqlite/__pycache__
-bot_4/utils/__pycache__
-bot_4/utils/__pycache__
-bot_4/utils/__pycache__
+bot_4/utils/__pycache__/
+bot_4/utils/__pycache__/
+bot_4/utils/__pycache__/
 bot_4/utils/__pycache__/wb_analiz.cpython-313.pyc
 bot_4/utils/__pycache__/saveRead.cpython-313.pyc
 bot_4/utils/__pycache__/wb_analiz.cpython-313.pyc
+bot_4/__pycache__/
