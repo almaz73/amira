@@ -15,6 +15,7 @@ import env
 import whorehouse.wb as wb
 import utils.wb_analiz as wb_analiz
 import utils.ghost as ghost
+import utils.citation as citation
 
 
 
@@ -47,6 +48,7 @@ async def echo_handler(message: Message) -> None:
         help = message.text.upper().find('HELP')
         ost = message.text.upper().find('OST')
         game = message.text.upper().find('GAME')
+        cit = message.text.upper().find('CIT')
         if ghost.isStarted():
             if not is_number(message.text): return ghost.end()                    
             else: return await message.answer(ghost.ask(int(message.text)))
@@ -55,6 +57,8 @@ async def echo_handler(message: Message) -> None:
         if begin>-1:
             ans = wb.getWB()        
             await message.answer(ans)
+        elif cit>-1:
+            await message.answer(citation.nextCitation())
         elif help>-1:
             await message.answer(f"wb - склады\n ost- Остатки\n ost463- Остатки по артикулу")
         elif ost>-1:
