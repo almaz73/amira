@@ -48,15 +48,9 @@ async def echo_handler(message: Message) -> None:
     if message.text == '↩ Назад': return await message.answer('Выберите действие', reply_markup=kb.startMenu)
     if message.text == '✅ Цитата': 
         answer = citation.nextCitation()
-        trlink = InlineKeyboardMarkup(
-            inline_keyboard= [[
-                InlineKeyboardButton(
-                    text='Перевод', 
-                    url=f"https://translate.google.ru/?sl=en&tl=ru&text={answer}&op=translate")
-            ]]
-        ) 
-        return await message.answer(answer, reply_markup=trlink)    
-    if message.text == '🔧 Настройки': return await message.answer("""░░░░░░░░░░░░░░░░░
+        return await message.answer(answer, reply_markup=kb.getTranslateLink(answer)) 
+    if message.text == '☝ help': return await message.answer('Список команд', reply_markup=kb.help_commands)
+    if message.text == '🔧 Планирование': return await message.answer("""░░░░░░░░░░░░░░░░░
 ▄▄▄▄░░░░▄▄▄░░░░▄▄▄░
 ███▀░░▄█████▄▄█████
 ██░░░██████████████
@@ -75,7 +69,7 @@ async def echo_handler(message: Message) -> None:
     if message.text == '☸ Wildberies': return await message.answer(citation.nextCitation())
     
     try:
-        begin = message.text.upper().find('WB')
+        WB = message.text.upper().find('WB')
         help = message.text.upper().find('HELP')
         ost = message.text.upper().find('OST')
         game = message.text.upper().find('GAME')
@@ -84,8 +78,7 @@ async def echo_handler(message: Message) -> None:
             if not is_number(message.text): return ghost.end()                    
             else: return await message.answer(ghost.ask(int(message.text)))
         if game>-1: return await message.answer(ghost.start())
-
-        if begin>-1:
+        if WB>-1:
             ans = wb.getWB()        
             await message.answer(ans)
         elif cit>-1:
@@ -98,48 +91,36 @@ async def echo_handler(message: Message) -> None:
                  print (' 84848448 СОЗДАВАТЬ БУДЕТ')
                  wb_analiz.getAnaliz('0')
                  await message.answer('Создан новый файл аналитики') 
-
             elif not articulText:
                 await message.answer(
                         text='Выбери или пиши ost463',
-                        reply_markup=keyboard
+                        reply_markup=kb.keyboard
                 )
-           
-            
             else:
                 ans = wb_analiz.getAnaliz(articulText)
-                await message.answer(ans) 
-                
-
-
-                   
+                await message.answer(ans)                    
         else: await message.send_copy(chat_id=message.chat.id)
     except TypeError:
         await message.answer("Nice try!")
 
 
-# Создаем объекты инлайн-кнопок
-bt1 = InlineKeyboardButton(text='262',callback_data='262')
-bt2 = InlineKeyboardButton(text='382',callback_data='382')
-bt3 = InlineKeyboardButton(text='463',callback_data='463')
-bt4 = InlineKeyboardButton(text='542',callback_data='542')
-bt5 = InlineKeyboardButton(text='567',callback_data='567')
-bt6 = InlineKeyboardButton(text='755',callback_data='755')
 
-# Создаем объект инлайн-клавиатуры
-keyboard = InlineKeyboardMarkup(
-    inline_keyboard=[[bt1, bt2, bt3, bt4, bt5, bt6]]
-)
-
+@dp.callback_query(F.data.in_(['game','cit','ost','wb']))
+async def process_buttons_press(callback: CallbackQuery):   
+    if callback.data == 'wb': await callback.message.answer(wb.getWB())
+    if callback.data == 'cit': 
+        answer = citation.nextCitation()
+        await callback.message.answer("Цитата:\n"+answer, reply_markup=kb.getTranslateLink(answer)) 
+    if callback.data == 'game': await callback.message.answer(ghost.start())
+    if callback.data == 'ost': 
+        await callback.message.answer(text='Выбери или пиши ost463',reply_markup=kb.keyboard) 
 
 @dp.callback_query(F.data.in_(['262','382','463','542','567','755']))
 async def process_buttons_press(callback: CallbackQuery):    
     print ('callback', callback.data)
     ans = wb_analiz.getAnaliz(callback.data)
-
     await callback.message.edit_text(ans)
     await callback.answer()
-
 
 
 async def main() -> None:

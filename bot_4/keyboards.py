@@ -1,10 +1,5 @@
 from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, KeyboardButton, InlineKeyboardButton
 
-trlink = InlineKeyboardMarkup(
-    inline_keyboard= [[
-        InlineKeyboardButton(text='transp', url='https://translate.google.ru/?sl=en&tl=ru&text=He wants to run&op=translate')
-    ]]
-) 
 
 startMenu = ReplyKeyboardMarkup(
   keyboard=[
@@ -21,10 +16,11 @@ startMenu = ReplyKeyboardMarkup(
 subMenu = ReplyKeyboardMarkup(
   keyboard=[
     [
-      KeyboardButton(text='🔧 Настройки'),
+      KeyboardButton(text='🔧 Мои Планы'),
       KeyboardButton(text='☸ Wildberies')
     ],
     [
+       KeyboardButton(text='☝ help'),
        KeyboardButton(text='↩ Назад')
     ]
   ],
@@ -33,3 +29,33 @@ subMenu = ReplyKeyboardMarkup(
   input_field_placeholder='Подменю'
 )
 
+
+# инлайн-команды
+h1 = InlineKeyboardButton(text='Цитата',callback_data='cit')
+h2 = InlineKeyboardButton(text='Игра',callback_data='game')
+h3 = InlineKeyboardButton(text='Склад',callback_data='wb')
+h4 = InlineKeyboardButton(text='Топ товары',callback_data='ost')
+help_commands = InlineKeyboardMarkup(
+    inline_keyboard=[[h1,h2],[h3, h4]]
+)
+
+
+# Создаем объекты инлайн-кнопок
+bt1 = InlineKeyboardButton(text='262',callback_data='262')
+bt2 = InlineKeyboardButton(text='382',callback_data='382')
+bt3 = InlineKeyboardButton(text='463',callback_data='463')
+bt4 = InlineKeyboardButton(text='542',callback_data='542')
+bt5 = InlineKeyboardButton(text='567',callback_data='567')
+bt6 = InlineKeyboardButton(text='755',callback_data='755')
+keyboard = InlineKeyboardMarkup(
+    inline_keyboard=[[bt1, bt2, bt3, bt4, bt5, bt6]]
+)
+
+def getTranslateLink(answer):
+  return InlineKeyboardMarkup(
+            inline_keyboard= [[
+                InlineKeyboardButton(
+                    text='Перевод', 
+                    url=f"https://translate.google.ru/?sl=en&tl=ru&text={answer}&op=translate")
+            ]]
+        ) 
