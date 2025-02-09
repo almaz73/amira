@@ -44,34 +44,25 @@ async def command_start_handler(message: Message) -> None:
 
 @dp.message()
 async def echo_handler(message: Message) -> None:
-    if message.text == '🐸 Меню': return await message.answer('Выберите действие', reply_markup=kb.subMenu)
+    print('====message==', message)
+    if message.text == '☸ Wildberies': return await message.answer('Выберите действие', reply_markup=kb.subMenu)
     if message.text == '↩ Назад': return await message.answer('Выберите действие', reply_markup=kb.startMenu)
     if message.text == '✅ Цитата': 
         answer = citation.nextCitation()
         return await message.answer(answer, reply_markup=kb.getTranslateLink(answer)) 
-    if message.text == '☝ help': return await message.answer('Список команд', reply_markup=kb.help_commands)
-    if message.text == '🔧 Планирование': return await message.answer("""░░░░░░░░░░░░░░░░░
-▄▄▄▄░░░░▄▄▄░░░░▄▄▄░
-███▀░░▄█████▄▄█████
-██░░░██████████████
-██░░░██████████████
-██░░░▀█████████████
-██▄░░░░▀██████████▀
-████░░░░░▀██████▀░░
-░░░░░░░░░░░▀██▀░░░░
-░░░░░░░░▄▄░░░░░░░░░
-█░███▀▄█▀▀█▄░▀██▀░▀
-█▄█▀░▄█░░░░█▄░██░░░
-░█░░░██░░░░██░██░░░
-░█░░░░█▄░░▄█░░██░░░
-███▄░░░▀██▀░░░░▀███
-░░░░░░░░░░░░░░░░░░░""")
-    if message.text == '☸ Wildberies': return await message.answer(citation.nextCitation())
+    if message.text == '☝ Ссылки': return await message.answer(kb.links, parse_mode='HTML')    
+    if message.text == '🐸 Приемка': return await message.answer(wb.getWB())
+    # if message.text == '🔧 Мои Планы': return await message.answer(kb.links, parse_mode='HTML')
     
+    if message.text == '/love': return await message.answer(kb.iloveYou)
+    if message.text == '/ost' or  message.text == '🛒 Остатки': 
+        return await message.answer(text='Выбери или пиши ост463', reply_markup=kb.keyboard)
+
     try:
         WB = message.text.upper().find('WB')
         help = message.text.upper().find('HELP')
         ost = message.text.upper().find('OST')
+        if not ost: ost = message.text.upper().find('ОСТ')
         game = message.text.upper().find('GAME')
         cit = message.text.upper().find('CIT')
         if ghost.isStarted():
@@ -88,7 +79,6 @@ async def echo_handler(message: Message) -> None:
         elif ost>-1:
             articulText = message.text[3:]
             if articulText == '0':
-                 print (' 84848448 СОЗДАВАТЬ БУДЕТ')
                  wb_analiz.getAnaliz('0')
                  await message.answer('Создан новый файл аналитики') 
             elif not articulText:

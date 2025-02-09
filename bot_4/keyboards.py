@@ -5,7 +5,7 @@ startMenu = ReplyKeyboardMarkup(
   keyboard=[
     [
       KeyboardButton(text='✅ Цитата'),
-      KeyboardButton(text='🐸 Меню')
+      KeyboardButton(text='☸ Wildberies')
     ]
   ],
   resize_keyboard=True,
@@ -16,12 +16,12 @@ startMenu = ReplyKeyboardMarkup(
 subMenu = ReplyKeyboardMarkup(
   keyboard=[
     [
-      KeyboardButton(text='🔧 Мои Планы'),
-      KeyboardButton(text='☸ Wildberies')
+      KeyboardButton(text='↩ Назад'),     
+      KeyboardButton(text='🐸 Приемка')
     ],
     [
-       KeyboardButton(text='☝ help'),
-       KeyboardButton(text='↩ Назад')
+      KeyboardButton(text='☝ Ссылки'),
+      KeyboardButton(text='🛒 Остатки')
     ]
   ],
   resize_keyboard=True,
@@ -31,13 +31,36 @@ subMenu = ReplyKeyboardMarkup(
 
 
 # инлайн-команды
-h1 = InlineKeyboardButton(text='Цитата',callback_data='cit')
-h2 = InlineKeyboardButton(text='Игра',callback_data='game')
-h3 = InlineKeyboardButton(text='Склад',callback_data='wb')
-h4 = InlineKeyboardButton(text='Топ товары',callback_data='ost')
-help_commands = InlineKeyboardMarkup(
-    inline_keyboard=[[h1,h2],[h3, h4]]
-)
+# h1 = InlineKeyboardButton(text='Цитата',callback_data='cit')
+# h2 = InlineKeyboardButton(text='Игра',callback_data='game')
+# h3 = InlineKeyboardButton(text='Склад',callback_data='wb')
+# h4 = InlineKeyboardButton(text='Топ товары',callback_data='ost')
+# help_commands = InlineKeyboardMarkup(
+#     inline_keyboard=[[h1,h2],[h3, h4]]
+# )
+
+links = """/cit - Случайная цитата
+/wb - склад WB (приемка)
+/ost - Остатки по товарам (ost463)
+/game - игра 'Угадай число
+/love - I love You'"""
+
+iloveYou="""░░░░░░░░░░░░░░░░
+▄▄▄░░░░▄▄▄░░░▄▄▄
+██▀░░▄█████▄████
+█░░░████████████
+█░░░████████████
+█░░░▀███████████
+█▄░░░░▀█████████
+████░░░░▀█████▀░
+░░░░░░░░░░▀█▀░░░
+░░░░░░░▄▄░░░░░░░
+█░██▀▄█▀▀█▄░▀█░█
+█▄█▀▄█░░░░█▄░█░█
+░█░░██░░░░██░█░█
+░█░░░█▄░░▄█░░█░█
+███▄░░▀██▀░░░▀█▀
+░░░░░░░░░░░░░░░░"""
 
 
 # Создаем объекты инлайн-кнопок
@@ -59,3 +82,4 @@ def getTranslateLink(answer):
                     url=f"https://translate.google.ru/?sl=en&tl=ru&text={answer}&op=translate")
             ]]
         ) 
+
