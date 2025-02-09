@@ -8,7 +8,7 @@ from aiogram import Bot, Dispatcher, html
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart
-from aiogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
+from aiogram.types import Message, CallbackQuery
 
 
 import env
@@ -17,6 +17,7 @@ import whorehouse.wb as wb
 import utils.wb_analiz as wb_analiz
 import utils.ghost as ghost
 import utils.citation as citation
+import baza.db as db
 
 
 
@@ -44,7 +45,10 @@ async def command_start_handler(message: Message) -> None:
 
 @dp.message()
 async def echo_handler(message: Message) -> None:
-    print('====message==', message)
+    db.visit(message.from_user.first_name, message.from_user.id) # Записываем посетителя 
+  
+
+    # print('message.user.id = ', message.user)
     if message.text == '☸ Wildberies': return await message.answer('Выберите действие', reply_markup=kb.subMenu)
     if message.text == '↩ Назад': return await message.answer('Выберите действие', reply_markup=kb.startMenu)
     if message.text == '✅ Цитата': 
@@ -58,6 +62,7 @@ async def echo_handler(message: Message) -> None:
     if message.text == '/ost' or  message.text == '🛒 Остатки': 
         return await message.answer(text='Выбери или пиши ост463', reply_markup=kb.keyboard)
 
+    # Если не отловили, пробуем по вхождению букв
     try:
         WB = message.text.upper().find('WB')
         help = message.text.upper().find('HELP')
@@ -95,15 +100,15 @@ async def echo_handler(message: Message) -> None:
 
 
 
-@dp.callback_query(F.data.in_(['game','cit','ost','wb']))
-async def process_buttons_press(callback: CallbackQuery):   
-    if callback.data == 'wb': await callback.message.answer(wb.getWB())
-    if callback.data == 'cit': 
-        answer = citation.nextCitation()
-        await callback.message.answer("Цитата:\n"+answer, reply_markup=kb.getTranslateLink(answer)) 
-    if callback.data == 'game': await callback.message.answer(ghost.start())
-    if callback.data == 'ost': 
-        await callback.message.answer(text='Выбери или пиши ost463',reply_markup=kb.keyboard) 
+# @dp.callback_query(F.data.in_(['game','cit','ost','wb']))
+# async def process_buttons_press(callback: CallbackQuery):   
+#     if callback.data == 'wb': await callback.message.answer(wb.getWB())
+#     if callback.data == 'cit': 
+#         answer = citation.nextCitation()
+#         await callback.message.answer("Цитата:\n"+answer, reply_markup=kb.getTranslateLink(answer)) 
+#     if callback.data == 'game': await callback.message.answer(ghost.start())
+#     if callback.data == 'ost': 
+#         await callback.message.answer(text='Выбери или пиши ost463',reply_markup=kb.keyboard) 
 
 @dp.callback_query(F.data.in_(['262','382','463','542','567','755']))
 async def process_buttons_press(callback: CallbackQuery):    
