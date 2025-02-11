@@ -13,6 +13,7 @@ from aiogram.types import Message, CallbackQuery
 
 import env
 import keyboards as kb
+import keyboardsOst as kbOst
 import whorehouse.wb as wb
 import utils.wb_analiz as wb_analiz
 import utils.ghost as ghost
@@ -55,16 +56,17 @@ async def echo_handler(message: Message) -> None:
         answer = citation.nextCitation()
         return await message.answer(answer, reply_markup=kb.getTranslateLink(answer)) 
     if message.text == '☝ Ссылки': return await message.answer(kb.links, parse_mode='HTML')    
-    if message.text == '🐸 Приемка': return await message.answer(wb.getWB())
-    # if message.text == '🔧 Мои Планы': return await message.answer(kb.links, parse_mode='HTML')
+    if message.text == '🐸 Приемка': 
+        key = env.WB_KEY # Пока ключ берем зашитый в код
+        return await message.answer('<b>Прогноз на 14 дней</b>:\n\n'+wb.getWB(key), parse_mode='HTML')
     
     if message.text == '/love': return await message.answer(kb.iloveYou)
     if message.text == '/ost' or  message.text == '🛒 Остатки':
         store_ids = db.wb_get_store(message.from_user.id) 
         print('store_ids = ', store_ids)
-        if not store_ids: return await message.answer('Необходимо скопировать токен для чтения данных по API из настроек продавца. Тогда можно будет увидеть остатки товаров из этого магазина')
+        if not store_ids: return await message.answer('Необходимо скопировать токен "Аналитика" из настроек продавца (доступ к API). Только для чтения, чтобы увидеть остатки товаров из добавленного магазина')
         else: return await message.answer(text='Выбери или пиши ост463', 
-                                           reply_markup=kb.createOstButtons(store_ids))
+                                           reply_markup=kbOst.createOstButtons(store_ids))
 
     if len(message.text)>100 and message.text.find('QifQ.'): 
         db.wb_add_store(message.from_user.id, message.text)

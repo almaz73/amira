@@ -44,6 +44,26 @@ def wb_add_store(tgId, store_key):
     db.commit()
     db.close()
 
+# Удаление всех магазинов пользователя
+def wb_deleteAll_store(tgId):
+    db = sqlite3.connect('wb.db')
+    t = db.cursor()
+   
+    t.execute('''CREATE TABLE IF NOT EXISTS wb_stores (
+      key_store_id TEXT PRIMARY KEY,
+      user_id INTEGER,
+      dtime TEXT)''')
+    
+    t.execute(f"""DELETE FROM wb_stores WHERE user_id={tgId}""")
+
+    
+    t.execute("SELECT * FROM wb_stores")
+    for el in t.fetchall():
+        print(el)
+
+    db.commit()
+    db.close()
+
 # получить токены магазина по пользователю
 def wb_get_store(tgId):
     
@@ -55,7 +75,8 @@ def wb_get_store(tgId):
     db.close()
     return ans
   
-print('811111182 = ',wb_get_store(953446309))
+# print('811111182 = ',wb_get_store(953446309))
 
 
+# wb_deleteAll_store(953446309)
 # добавить артикул для пользователя по магазину

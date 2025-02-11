@@ -1,12 +1,6 @@
 import requests
-import env
+# import env
 from datetime import datetime
-# import locale
-
-# locale.setlocale(locale.LC_TIME, 'Russian')  # Русификация
-
-# нужно будет использовать из базы
-API_KEY = env.WB_KEY
 
 
 def getSimpleDate(text):
@@ -38,10 +32,10 @@ def prepare_items(response):
 
 # Склад   Коэффициенты приёмки
 url = 'https://supplies-api.wildberries.ru/api/v1/acceptance/coefficients'
-headers = {'Authorization': f'Bearer {API_KEY}','Content-Type': 'application/json'}
 params = {'warehouseIDs': [117986]}  # ID склада, (117986 - Казань)
 
-def getWB():
+def getWB(key):
+    headers = {'Authorization': f'Bearer {key}','Content-Type': 'application/json'}
     response = requests.get(url, headers=headers, params=params)
 
     # # Проверьте статус ответа
