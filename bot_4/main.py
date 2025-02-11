@@ -59,15 +59,23 @@ async def echo_handler(message: Message) -> None:
     # if message.text == '🔧 Мои Планы': return await message.answer(kb.links, parse_mode='HTML')
     
     if message.text == '/love': return await message.answer(kb.iloveYou)
-    if message.text == '/ost' or  message.text == '🛒 Остатки': 
-        return await message.answer(text='Выбери или пиши ост463', reply_markup=kb.keyboard)
+    if message.text == '/ost' or  message.text == '🛒 Остатки':
+        store_ids = db.wb_get_store(message.from_user.id) 
+        print('store_ids = ', store_ids)
+        if not store_ids: return await message.answer('Необходимо скопировать токен для чтения данных по API из настроек продавца. Тогда можно будет увидеть остатки товаров из этого магазина')
+        else: return await message.answer(text='Выбери или пиши ост463', 
+                                           reply_markup=kb.createOstButtons(store_ids))
+
+    if len(message.text)>100 and message.text.find('QifQ.'): 
+        db.wb_add_store(message.from_user.id, message.text)
+        return await message.answer('Токен сохранен')
 
     # Если не отловили, пробуем по вхождению букв
     try:
         WB = message.text.upper().find('WB')
         help = message.text.upper().find('HELP')
-        ost = message.text.upper().find('OST')
-        if not ost: ost = message.text.upper().find('ОСТ')
+        ost = message.text.upper().find('OST') 
+        if ost < 0: ost = message.text.upper().find('ОСТ')
         game = message.text.upper().find('GAME')
         cit = message.text.upper().find('CIT')
         if ghost.isStarted():
@@ -99,20 +107,10 @@ async def echo_handler(message: Message) -> None:
         await message.answer("Nice try!")
 
 
-
-# @dp.callback_query(F.data.in_(['game','cit','ost','wb']))
-# async def process_buttons_press(callback: CallbackQuery):   
-#     if callback.data == 'wb': await callback.message.answer(wb.getWB())
-#     if callback.data == 'cit': 
-#         answer = citation.nextCitation()
-#         await callback.message.answer("Цитата:\n"+answer, reply_markup=kb.getTranslateLink(answer)) 
-#     if callback.data == 'game': await callback.message.answer(ghost.start())
-#     if callback.data == 'ost': 
-#         await callback.message.answer(text='Выбери или пиши ost463',reply_markup=kb.keyboard) 
-
-@dp.callback_query(F.data.in_(['262','382','463','542','567','755']))
+#, .in_(['262','382','463','542','567', '755'])
+@dp.callback_query(F.data)
 async def process_buttons_press(callback: CallbackQuery):    
-    print ('callback', callback.data)
+    print ('callback.data', callback.data)    
     ans = wb_analiz.getAnaliz(callback.data)
     await callback.message.edit_text(ans)
     await callback.answer()

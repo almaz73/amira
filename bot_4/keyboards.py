@@ -74,6 +74,15 @@ keyboard = InlineKeyboardMarkup(
     inline_keyboard=[[bt1, bt2, bt3, bt4, bt5, bt6]]
 )
 
+def createOstButtons(keys):
+    print('keys = ', keys)
+    return InlineKeyboardMarkup(inline_keyboard=[[bt1, bt2, bt3]])
+   
+
+def wb_buttons(store_id):
+    print(':::store_id', store_id)
+    return keyboard
+
 def getTranslateLink(answer):
   return InlineKeyboardMarkup(
             inline_keyboard= [[

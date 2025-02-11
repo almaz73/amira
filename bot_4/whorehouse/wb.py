@@ -5,7 +5,7 @@ from datetime import datetime
 
 # locale.setlocale(locale.LC_TIME, 'Russian')  # Русификация
 
-
+# нужно будет использовать из базы
 API_KEY = env.WB_KEY
 
 
