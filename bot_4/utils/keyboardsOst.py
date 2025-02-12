@@ -25,6 +25,13 @@ def deleteOst(store, art):
     path = store+':::'+art
     db = sqlite3.connect('../wb.db')
     t = db.cursor()
+
+    t.execute(''' CREATE TABLE IF NOT EXISTS wb_ostatki (
+          path TEXT PRIMARY KEY,
+          store TEXT,              
+          article TEXT   
+        )''')
+
     t.execute(f"DELETE FROM wb_ostatki WHERE path='{path}'")
     db.commit()
     db.close()
@@ -32,6 +39,12 @@ def deleteOst(store, art):
 def getOst(store):
     db = sqlite3.connect('../wb.db')
     t = db.cursor()
+
+    t.execute(''' CREATE TABLE IF NOT EXISTS wb_ostatki (
+          path TEXT PRIMARY KEY,
+          store TEXT,              
+          article TEXT   
+        )''')
 
     t.execute(f"SELECT article FROM wb_ostatki WHERE store={store}")
     return t.fetchall()
@@ -49,20 +62,41 @@ def getOst(store):
 # 1:::2222
 
 # Создаем объекты инлайн-кнопок
-bt1 = InlineKeyboardButton(text='262',callback_data='262')
-bt2 = InlineKeyboardButton(text='382',callback_data='382')
-bt3 = InlineKeyboardButton(text='463',callback_data='463')
-bt4 = InlineKeyboardButton(text='542',callback_data='542')
-bt5 = InlineKeyboardButton(text='567',callback_data='567')
-bt6 = InlineKeyboardButton(text='755',callback_data='755')
-keyboard = InlineKeyboardMarkup(
-    inline_keyboard=[[bt1, bt2, bt3, bt4, bt5, bt6]]
-)
+# bt1 = InlineKeyboardButton(text='262',callback_data='262')
+# bt2 = InlineKeyboardButton(text='382',callback_data='382')
+# bt3 = InlineKeyboardButton(text='463',callback_data='463')
+# bt4 = InlineKeyboardButton(text='542',callback_data='542')
+# bt5 = InlineKeyboardButton(text='567',callback_data='567')
+# bt6 = InlineKeyboardButton(text='755',callback_data='755')
 
-def createOstButtons(keys):
-    print('keys = ', keys)
-    return InlineKeyboardMarkup(inline_keyboard=[[bt1, bt2, bt3]])
+# keyboard = InlineKeyboardMarkup(
+#     inline_keyboard=[[bt1, bt2, bt3, bt4, bt5, bt6]]
+# )
+bt_add = InlineKeyboardButton(text='Добавьте артикул +',callback_data='addOst')
+
+def createOstButtons(lenStores):
+    if lenStores == 1:
+        osts = getOst(1)
+        if len(osts) == 0 : return InlineKeyboardMarkup(inline_keyboard=[[bt_add]])
+        else:
+            arr = []
+            for el in osts:
+                ost = InlineKeyboardButton(text=f'{el[0]}',callback_data=f'{el[0]}')
+                arr.append(ost)
+            arr.append(InlineKeyboardButton(text='+', callback_data='addOst'))
+            arr.append(InlineKeyboardButton(text='-', callback_data='delOst'))
+            return InlineKeyboardMarkup(inline_keyboard=[arr])
+
+
+
 
 def wb_buttons(store_id):
-    print(':::store_id', store_id)
     return keyboard
+
+def addBts(val):
+    list = val[1:-1].split(',')
+    for el in list:
+        saveOst('1',  str(el).strip().lstrip())
+
+def delBt(val):
+    deleteOst('1', val[:-3])

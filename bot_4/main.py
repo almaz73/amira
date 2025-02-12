@@ -62,8 +62,13 @@ async def echo_handler(message: Message) -> None:
         store_ids = db.wb_get_store(message.from_user.id) 
         print('store_ids = ', store_ids)
         if not store_ids: return await message.answer('Необходимо скопировать токен "Аналитика" из настроек продавца (доступ к API). Только для чтения, чтобы увидеть остатки товаров из добавленного магазина')
-        else: return await message.answer(text='Выбери или пиши ост463', 
-                                           reply_markup=kbOst.createOstButtons(store_ids))
+        else: return await message.answer(text='Остатки по артикулу. Пример запроса: ост463',reply_markup=kbOst.createOstButtons(len(store_ids)))
+
+    if message.text[-3:] == '###':
+        return await message.answer('Артикул удален', reply_markup=kbOst.delBt(message.text))
+    elif message.text.find(',')>-1 and message.text[-1] == '#':
+        return await message.answer('Артикулы добавлены',reply_markup=kbOst.addBts(message.text))
+
 
     if len(message.text)>100 and message.text.find('QifQ.'): 
         db.wb_add_store(message.from_user.id, message.text)
@@ -109,7 +114,11 @@ async def echo_handler(message: Message) -> None:
 #, .in_(['262','382','463','542','567', '755'])
 @dp.callback_query(F.data)
 async def process_buttons_press(callback: CallbackQuery):    
-    print ('callback.data', callback.data)    
+    print ('callback.data', callback.data)
+    if callback.data == 'addOst':
+        return callback.message.edit_text('Введите в поле артикулы товаров через запятую. В конце завершите знаком #')
+    if callback.data == 'delOst':
+        return callback.message.edit_text('Введите артикул для удаления. В конце завершите тройным ###')
     ans = wb_analiz.getAnaliz(callback.data)
     await callback.message.edit_text(ans)
     await callback.answer()
