@@ -1,9 +1,9 @@
 import requests
-import env as env
+from bot_4 import env as env
 import utils.saveRead as saveRead
 
 
-headers = {'Authorization': f'Bearer {env.API_KEY_ANALITIKA}','Content-Type': 'application/json'}
+headers = {'Authorization': f'Bearer {env.API_KEY_ANALITIKA}', 'Content-Type': 'application/json'}
 params = {'locale':'ru', 'groupBySa': True, 'groupBySize': True, 'groupByBrand':False, 'groupBySubject': False, 'groupByNm': False, 'groupByBarcode': False,'filterPics':1, 'filterVolume':1}
 taskId = 0
 

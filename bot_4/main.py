@@ -1,7 +1,6 @@
 import asyncio
 import logging
 import sys
-from os import getenv
 
 from aiogram import F
 from aiogram import Bot, Dispatcher, html
@@ -10,10 +9,8 @@ from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
 
-
 import env
-import keyboards as kb
-import keyboardsOst as kbOst
+from bot_4.utils import keyboardsOst as kbOst, keyboards as kb
 import whorehouse.wb as wb
 import utils.wb_analiz as wb_analiz
 import utils.ghost as ghost

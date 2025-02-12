@@ -1,7 +1,7 @@
 import telebot
 # pip install pytelegrambotapi
 import wb
-import env
+from bot_4 import env
 
 TOKEN = env.TELEGRAM_TOKEN
 # bot = AsyncTeleBot(token=TOKEN)

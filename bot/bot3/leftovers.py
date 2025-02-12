@@ -1,7 +1,5 @@
 import requests
-import env
-from datetime import datetime
-
+from bot_4 import env
 
 API_KEY = env.WB_KEY
 API_KEY_ANALITIKA = env.API_KEY_ANALITIKA

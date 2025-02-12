@@ -1,6 +1,5 @@
-import requests
 from datetime import datetime
-import env
+from bot_4 import env
 import locale
 import time
 

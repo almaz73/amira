@@ -69,6 +69,12 @@ def wb_get_store(tgId):
     
     db = sqlite3.connect('wb.db')
     t = db.cursor()
+
+    t.execute('''CREATE TABLE IF NOT EXISTS wb_stores (
+         key_store_id TEXT PRIMARY KEY,
+         user_id INTEGER,
+         dtime TEXT)''')
+
     t.execute(f"SELECT key_store_id FROM wb_stores WHERE user_id={tgId}")
     ans =  t.fetchall()
     db.commit()

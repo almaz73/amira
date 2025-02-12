@@ -5,7 +5,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 def saveOst(store, art):
     path = store+':::'+art
-    db = sqlite3.connect('wb.db')
+    db = sqlite3.connect('../wb.db')
     t = db.cursor()
     
     # t.execute('DROP TABLE wb_ostatki')
@@ -23,14 +23,14 @@ def saveOst(store, art):
 
 def deleteOst(store, art):
     path = store+':::'+art
-    db = sqlite3.connect('wb.db')
+    db = sqlite3.connect('../wb.db')
     t = db.cursor()
     t.execute(f"DELETE FROM wb_ostatki WHERE path='{path}'")
     db.commit()
     db.close()
 
 def getOst(store):
-    db = sqlite3.connect('wb.db')
+    db = sqlite3.connect('../wb.db')
     t = db.cursor()
 
     t.execute(f"SELECT article FROM wb_ostatki WHERE store={store}")

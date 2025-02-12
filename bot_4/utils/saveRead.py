@@ -33,7 +33,8 @@ def readFile():
             f.close()
             return  list
     except FileNotFoundError:
-        return 'Файл аналитики не существует'
+        'Файл аналитики не существует'
+        return None
     
 # не нужно ли обновлять данные
 def read():
