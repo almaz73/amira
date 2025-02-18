@@ -39,21 +39,30 @@ async def command_start_handler(message: Message) -> None:
     """
     await message.answer(f"Hello, {html.bold(message.from_user.full_name)}!", reply_markup=kb.startMenu)
 
+@dp.message(lambda message: message.web_app_data and message.web_app_data.data)
+async def echo_miniApp(message: Message) -> None:
+    print('########## message = ', message)  # вся информация о сообщении
+    print('== == == message.web_app_data', message.web_app_data)
+    # пришло с веб апп
+    print('Получили из МИНИАПП=', message.web_app_data.data)
 
 
 @dp.message()
 async def echo_handler(message: Message) -> None:
-    db.visit(message.from_user.first_name, message.from_user.id) # Записываем посетителя 
+    db.visit(message.from_user.first_name, message.from_user.id) # Записываем посетителя
+
+
+    print('<><><><><><> message.text = ', message.text)
   
 
     # print('message.user.id = ', message.user)
     if message.text == '☸ Wildberies': return await message.answer('Выберите действие', reply_markup=kb.subMenu)
-    if message.text == '↩ Назад': return await message.answer('Выберите действие', reply_markup=kb.startMenu)
+    if message.text == '↩ Назад': return await message.answer('Другие возможности:\n\n'+kb.links, reply_markup=kb.startMenu)
     if message.text == '✅ Цитата': 
         answer = citation.nextCitation()
         return await message.answer(answer, reply_markup=kb.getTranslateLink(answer)) 
-    if message.text == '☝ Ссылки': return await message.answer(kb.links, parse_mode='HTML')    
-    if message.text == '🐸 Приемка': 
+    if message.text == '☝ Ссылки': return await message.answer(kb.links, parse_mode='HTML')
+    if message.text == '🐸 Приемка':
         key = env.WB_KEY # Пока ключ берем зашитый в код
         return await message.answer('<b>Прогноз на 14 дней</b>:\n\n' + wb.getWB(key), parse_mode='HTML')
     
@@ -61,18 +70,22 @@ async def echo_handler(message: Message) -> None:
     if message.text == '/ost' or  message.text == '🛒 Остатки':
         store_ids = db.wb_get_store(message.from_user.id) 
         print('store_ids = ', store_ids)
-        if not store_ids: return await message.answer('Необходимо скопировать токен "Аналитика" из настроек продавца (доступ к API). Только для чтения, чтобы увидеть остатки товаров из добавленного магазина')
+        if not store_ids: return await message.answer('Нет данных по магазинам, необходимо зайти в "Настройки"')
         else: return await message.answer(text='Остатки по артикулу. Пример запроса: ост463',reply_markup=kbOst.createOstButtons(len(store_ids)))
 
-    if message.text[-3:] == '###':
-        return await message.answer('Артикул удален', reply_markup=kbOst.delBt(message.text))
-    elif message.text.find(',')>-1 and message.text[-1] == '#':
-        return await message.answer('Артикулы добавлены',reply_markup=kbOst.addBts(message.text))
+    # if message.text[-3:] == '###':
+    #     return await message.answer('Артикул удален', reply_markup=kbOst.delBt(message.text))
+    # elif message.text.find(',')>-1 and message.text[-1] == '#':
+    #     return await message.answer('Артикулы добавлены',reply_markup=kbOst.addBts(message.text))
 
 
-    if len(message.text)>100 and message.text.find('QifQ.'): 
-        db.wb_add_store(message.from_user.id, message.text)
-        return await message.answer('Токен сохранен')
+    # if len(message.text)>100 and message.text.find('QifQ.'):
+    #     db.wb_add_store(message.from_user.id, message.text)
+    #     return await message.answer('Токен сохранен')
+
+    if message.text== None :
+        print('========None=======')
+        return False
 
     # Если не отловили, пробуем по вхождению букв
     try:
@@ -112,10 +125,13 @@ async def echo_handler(message: Message) -> None:
         await message.answer("Nice try!")
 
 
+
+
+
 #, .in_(['262','382','463','542','567', '755'])
 @dp.callback_query(F.data)
 async def process_buttons_press(callback: CallbackQuery):    
-    print ('callback.data', callback.data)
+    print ('>>>>>>>callback.data', callback.data)
     if callback.data == 'addOst':
         return callback.message.edit_text('Введите в поле артикулы товаров через запятую. В конце завершите знаком #')
     if callback.data == 'delOst':

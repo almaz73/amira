@@ -1,4 +1,4 @@
-from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, KeyboardButton, InlineKeyboardButton
+from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, KeyboardButton, InlineKeyboardButton, WebAppInfo
 
 
 startMenu = ReplyKeyboardMarkup(
@@ -20,7 +20,7 @@ subMenu = ReplyKeyboardMarkup(
       KeyboardButton(text='🐸 Приемка')
     ],
     [
-      KeyboardButton(text='☝ Ссылки'),
+      KeyboardButton(text='☝ Настройки', web_app=WebAppInfo(url="https://fmap.ru/tg_wbFree/WBfreeStore.html?store=7art=3:333'")),
       KeyboardButton(text='🛒 Остатки')
     ]
   ],
@@ -90,3 +90,9 @@ def getTranslateLink(answer):
             ]]
         ) 
 
+# keyboarEdit = InlineKeyboardMarkup(inline_keyboard=[
+#     [InlineKeyboardButton(
+#         text= 'После сохранения, по кнопке "Фикс" зафиксируйте изменения',
+#         web_app=WebAppInfo(url="https://fmap.ru/tg_wbFree/WBfreeStore.html?store=1art=1:111111'")  # Укажите URL вашего Mini App
+#     )]
+# ])
