@@ -41,10 +41,21 @@ async def command_start_handler(message: Message) -> None:
 
 @dp.message(lambda message: message.web_app_data and message.web_app_data.data)
 async def echo_miniApp(message: Message) -> None:
-    print('########## message = ', message)  # вся информация о сообщении
-    print('== == == message.web_app_data', message.web_app_data)
+    # print('########## message = ', message)  # вся информация о сообщении
+    # print('== == == message.web_app_data', message.web_app_data)
     # пришло с веб апп
-    print('Получили из МИНИАПП=', message.web_app_data.data)
+
+    stores = {}
+    arrStores =  message.web_app_data.data.split('🐷')
+    ind = 0
+    for el in arrStores:
+        ind += 1
+        arrEl = el.split('🌞')
+        if arrEl[0]:
+            stores[ind] = {'name': arrEl[0], 'art': arrEl[1], 'token': arrEl[2]}
+
+    print('Получили из МИНИАПП=',message.web_app_data)
+    print ('stores', stores)
 
 
 @dp.message()
