@@ -41,6 +41,8 @@ async def command_start_handler(message: Message) -> None:
 
 @dp.message(lambda message: message.web_app_data and message.web_app_data.data)
 async def echo_miniApp(message: Message) -> None:
+    db.visit(message.from_user.first_name, message.from_user.id) # записываем посетителя
+
     # print('########## message = ', message)  # вся информация о сообщении
     print(' message.from_user.id',  message.from_user.id)
     # print('== == == message.web_app_data', message.web_app_data)
@@ -57,6 +59,7 @@ async def echo_miniApp(message: Message) -> None:
 
     print('Получили из МИНИАПП=',message.web_app_data)
     print ('stores', stores)
+    db.saveDatasFromMiniApp(message.from_user.id, message.web_app_data.data)
 
 
 

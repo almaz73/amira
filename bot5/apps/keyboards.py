@@ -20,7 +20,8 @@ subMenu = ReplyKeyboardMarkup(
       KeyboardButton(text='🐸 Приемка')
     ],
     [
-      KeyboardButton(text='☝ Настройки', web_app=WebAppInfo(url="https://fmap.ru/tg_wbFree/WBfreeStore.html?d=Магазин1🌞123,222,333,444🌞1🐷Маг2🌞12,2,🌞🐷")),
+      KeyboardButton(text='☝ Настройки', web_app=WebAppInfo(url="https://fmap.ru/tg_wbFree/WBfreeStore.html")),
+    # KeyboardButton(text='☝ Настройки', web_app=WebAppInfo(url="https://fmap.ru/tg_wbFree/WBfreeStore.html?d=Магазин1🌞123,222,333,444🌞1🐷Маг2🌞12,2,🌞🐷")),
       KeyboardButton(text='🛒 Остатки')
     ]
   ],

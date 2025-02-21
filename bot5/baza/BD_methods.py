@@ -21,9 +21,7 @@ def visit(name, tgId):
     db.commit()
     db.close()
 
-visit('8888_ИВАН', 567222)
-visit('МАША', 7777)
-
+# visit('МАША', 7777)
 # print(datetime.now())
 # print(datetime.strptime('2025-10-10T12:12:12Z', "%Y-%m-%dT%H:%M:%SZ").date())
 print(datetime.strptime('12/15/2021', '%m/%d/%Y').date())
@@ -71,6 +69,13 @@ def editOstatki(token, tgId, name, arts):
 # editOstatki('token3333', 555, 'МА_4', '1,2,3,4,5')
 # editOstatki('token1212121212', 1234512, 'M_3', '')
 
+def deleteAllStores(tgId):
+    db = sqlite3.connect('baza.db')
+    t = db.cursor()
+    ifNoExist(t)
+    t.execute(f"DELETE FROM stores WHERE tg_id={tgId}")
+    db.commit()
+    db.close()
 
 # получить все токены магазинов по пользователю
 def wb_get_store(tgId):
@@ -83,5 +88,40 @@ def wb_get_store(tgId):
     db.close()
     return ans
 
-
 # print('==',wb_get_store(777))
+
+
+def saveDatasFromMiniApp(tgId, datas):
+    print('=> ',tgId)
+    print('=> ',datas)
+
+    stores = {}
+    arrStores = datas.split('🐷')
+    ind = 0
+    for el in arrStores:
+        ind += 1
+        arrEl = el.split('🌞')
+        if arrEl[0]:
+            stores[ind] = {'name': arrEl[0], 'art': arrEl[1], 'token': arrEl[2]}
+
+    tokens = wb_get_store(tgId)
+    print(tokens)
+
+    # Если кол-во магазинов не ровно количеству пришедших нужно удалить все магазины пользователя
+    if len(tokens) != len(stores):
+        tokens = None
+        deleteAllStores(tgId)
+
+
+    # print('stores', stores)
+    for i in stores:
+        if tokens: editOstatki(tokens[i-1][0], tgId, stores[i]['name'], stores[i]['art'])
+        else: editOstatki(stores[i]['token'], tgId, stores[i]['name'], stores[i]['art'])
+
+
+
+# saveDatasFromMiniApp(777, "SHOP_1🌞123,777🌞exist🐷Shop_2🌞12,2,7🌞🐷")
+
+# editOstatki('token225', 777, 'shop2', 'кара1, ak22')
+
+
