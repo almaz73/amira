@@ -15,7 +15,7 @@ import apps.wb as wb
 import apps.wb_analiz as wb_analiz
 import apps.ghost as ghost
 import apps.citation as citation
-import baza.db as db
+import baza.BD_methods as db
 
 
 
@@ -41,10 +41,23 @@ async def command_start_handler(message: Message) -> None:
 
 @dp.message(lambda message: message.web_app_data and message.web_app_data.data)
 async def echo_miniApp(message: Message) -> None:
-    print('########## message = ', message)  # вся информация о сообщении
-    print('== == == message.web_app_data', message.web_app_data)
+    # print('########## message = ', message)  # вся информация о сообщении
+    print(' message.from_user.id',  message.from_user.id)
+    # print('== == == message.web_app_data', message.web_app_data)
     # пришло с веб апп
-    print('Получили из МИНИАПП=', message.web_app_data.data)
+
+    stores = {}
+    arrStores =  message.web_app_data.data.split('🐷')
+    ind = 0
+    for el in arrStores:
+        ind += 1
+        arrEl = el.split('🌞')
+        if arrEl[0]:
+            stores[ind] = {'name': arrEl[0], 'art': arrEl[1], 'token': arrEl[2]}
+
+    print('Получили из МИНИАПП=',message.web_app_data)
+    print ('stores', stores)
+
 
 
 @dp.message()
@@ -69,7 +82,7 @@ async def echo_handler(message: Message) -> None:
     if message.text == '/love': return await message.answer(kb.iloveYou)
     if message.text == '/ost' or  message.text == '🛒 Остатки':
         store_ids = db.wb_get_store(message.from_user.id) 
-        print('store_ids = ', store_ids)
+        print('st o r e _ i d s = ', store_ids)
         if not store_ids: return await message.answer('Нет данных по магазинам, необходимо зайти в "Настройки"')
         else: return await message.answer(text='Остатки по артикулу. Пример запроса: ост463',reply_markup=kbOst.createOstButtons(len(store_ids)))
 
@@ -80,7 +93,7 @@ async def echo_handler(message: Message) -> None:
 
 
     # if len(message.text)>100 and message.text.find('QifQ.'):
-    #     db.wb_add_store(message.from_user.id, message.text)
+    #     db.wb_add_store(message.from_user.id, message.te xt)
     #     return await message.answer('Токен сохранен')
 
     if message.text== None :
