@@ -3,11 +3,13 @@ import env as env
 import apps.saveRead as saveRead
 
 
+
 headers = {'Authorization': f'Bearer {env.API_KEY_ANALITIKA}', 'Content-Type': 'application/json'}
 params = {'locale':'ru', 'groupBySa': True, 'groupBySize': True, 'groupByBrand':False, 'groupBySubject': False, 'groupByNm': False, 'groupByBarcode': False,'filterPics':1, 'filterVolume':1}
 taskId = 0
 
 def startOst():
+    print('__startOst__')
     url1 = 'https://seller-analytics-api.wildberries.ru/api/v1/warehouse_remains' # Создаем отчет
     response = requests.get(url1, headers=headers, params=params)
     taskId = response.json()['data']['taskId']
@@ -58,6 +60,8 @@ def getOst(taskId, art):
         return analizator(file, art)
     else:    
         url3 = f'https://seller-analytics-api.wildberries.ru/api/v1/warehouse_remains/tasks/{taskId}/download'
+
+        print('__startOst222222__')
 
         response2 = requests.get(url3, headers=headers)
         newfile = response2.json()
