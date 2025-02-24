@@ -1,34 +1,34 @@
 from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, KeyboardButton, InlineKeyboardButton, WebAppInfo
-
+from baza import BD_methods
 
 startMenu = ReplyKeyboardMarkup(
-  keyboard=[
-    [
-      KeyboardButton(text='✅ Цитата'),
-      KeyboardButton(text='☸ Wildberies')
-    ]
-  ],
-  resize_keyboard=True,
-  one_time_keyboard=False,
-  input_field_placeholder='Начальное меню'
+    keyboard=[
+        [
+            KeyboardButton(text='✅ Цитата'),
+            KeyboardButton(text='☸ Wildberies')
+        ]
+    ],
+    resize_keyboard=True,
+    one_time_keyboard=False,
+    input_field_placeholder='Начальное меню'
 )
 
 subMenu = ReplyKeyboardMarkup(
-  keyboard=[
-    [
-      KeyboardButton(text='↩ Назад'),     
-      KeyboardButton(text='🐸 Приемка')
+    keyboard=[
+        [
+            KeyboardButton(text='↩ Назад'),
+            KeyboardButton(text='🐸 Приемка')
+        ],
+        [
+            KeyboardButton(text='☝ Настройки', web_app=WebAppInfo(url="https://fmap.ru/tg_wbFree/WBfreeStore.html")),
+            # KeyboardButton(text='☝ Настройки', web_app=WebAppInfo(url="https://fmap.ru/tg_wbFree/WBfreeStore.html?d=Магазин1🌞123,222,333,444🌞1🐷Маг2🌞12,2,🌞🐷")),
+            KeyboardButton(text='🛒 Остатки')
+        ]
     ],
-    [
-      KeyboardButton(text='☝ Настройки', web_app=WebAppInfo(url="https://fmap.ru/tg_wbFree/WBfreeStore.html?d=Магазин1🌞123,222,333,444🌞1🐷Маг2🌞12,2,🌞🐷")),
-      KeyboardButton(text='🛒 Остатки')
-    ]
-  ],
-  resize_keyboard=True,
-  one_time_keyboard=False,
-  input_field_placeholder='Подменю'
+    resize_keyboard=True,
+    one_time_keyboard=False,
+    input_field_placeholder='Подменю'
 )
-
 
 # инлайн-команды
 # h1 = InlineKeyboardButton(text='Цитата',callback_data='cit')
@@ -45,7 +45,7 @@ links = """/cit - Случайная цитата
 /game - игра 'Угадай число
 /love - I love You'"""
 
-iloveYou="""░░░░░░░░░░░░░░░░
+iloveYou = """░░░░░░░░░░░░░░░░
 ▄▄▄░░░░▄▄▄░░░▄▄▄
 ██▀░░▄█████▄████
 █░░░████████████
@@ -62,37 +62,68 @@ iloveYou="""░░░░░░░░░░░░░░░░
 ███▄░░▀██▀░░░▀█▀
 ░░░░░░░░░░░░░░░░"""
 
-
 # Создаем объекты инлайн-кнопок
-bt1 = InlineKeyboardButton(text='262',callback_data='262')
-bt2 = InlineKeyboardButton(text='382',callback_data='382')
-bt3 = InlineKeyboardButton(text='463',callback_data='463')
-bt4 = InlineKeyboardButton(text='542',callback_data='542')
-bt5 = InlineKeyboardButton(text='567',callback_data='567')
-bt6 = InlineKeyboardButton(text='755',callback_data='755')
+bt1 = InlineKeyboardButton(text='262', callback_data='262')
+bt2 = InlineKeyboardButton(text='382', callback_data='382')
+bt3 = InlineKeyboardButton(text='463', callback_data='463')
+bt4 = InlineKeyboardButton(text='542', callback_data='542')
+bt5 = InlineKeyboardButton(text='567', callback_data='567')
+bt6 = InlineKeyboardButton(text='755', callback_data='755')
 keyboard = InlineKeyboardMarkup(
     inline_keyboard=[[bt1, bt2, bt3, bt4, bt5, bt6]]
 )
 
+
+# link = "d=SHOP_1🌞123,777🌞exist🐷Shop_2🌞12,2,7🌞exist🐷"
+
+
+def getLinkFromBD(tgId):
+    link = BD_methods.getSavedStoresBeforeEdit(tgId)
+    # print("?????  туту link=", link)
+    # link = "SHOP_1🌞123,777🌞exist🐷Shop_2🌞12,2,7🌞exist🐷"
+    return InlineKeyboardMarkup(
+        inline_keyboard=[[
+            InlineKeyboardButton(text='из базы данных',
+                                 web_app=WebAppInfo(url="https://fmap.ru/tg_wbFree/WBfreeStore.html?d=" + link))
+        ]]
+    )
+
+# print('>>>',)
+getLinkFromBD(3333)
+
+def getOst_stores(tgId):
+    list = BD_methods.wb_get_arts(tgId)
+    bts=[]
+    for i in list:
+        print('i', i[0])
+        bts.append(InlineKeyboardButton(text=i[0], callback_data='shop:::'+i[0]))
+    return InlineKeyboardMarkup(inline_keyboard=[bts])
+
+def getOst_arts(tgId, store):
+    list = BD_methods.wb_get_arts(tgId)
+    bts = []
+    for i in list:
+        print('i', i[0])
+        if store == i[0]:
+            for k in i[1].split(','):
+                 bts.append(InlineKeyboardButton(text=k, callback_data=k))
+    return InlineKeyboardMarkup(inline_keyboard=[bts])
+
+# print(getOst(777))
+# print(getOst_arts(777, 'SHOP_1'))
+
 # def createOstButtons(keys):
 #     print('keys = ', keys)
 #     return InlineKeyboardMarkup(inline_keyboard=[[bt1, bt2, bt3]])
-   
-
 
 
 def getTranslateLink(answer):
-  return InlineKeyboardMarkup(
-            inline_keyboard= [[
-                InlineKeyboardButton(
-                    text='Перевод', 
-                    url=f"https://translate.google.ru/?sl=en&tl=ru&text={answer}&op=translate")
-            ]]
-        ) 
+    return InlineKeyboardMarkup(
+        inline_keyboard=[[
+            InlineKeyboardButton(
+                text='Перевод',
+                url=f"https://translate.google.ru/?sl=en&tl=ru&text={answer}&op=translate")
+        ]]
+    )
 
-# keyboarEdit = InlineKeyboardMarkup(inline_keyboard=[
-#     [InlineKeyboardButton(
-#         text= 'После сохранения, по кнопке "Фикс" зафиксируйте изменения',
-#         web_app=WebAppInfo(url="https://fmap.ru/tg_wbFree/WBfreeStore.html?store=1art=1:111111'")  # Укажите URL вашего Mini App
-#     )]
-# ])
+
