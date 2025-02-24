@@ -88,7 +88,7 @@ def deleteAllStores(uuid):
 
 ## deleteAllStores('a58c2b94535947389340d53e6e5dc2d9')
 
-## получить все магазины и uuid и назманиямагазинов по tgId
+## получить все магазины и uuid и названия магазинов по tgId
 def wb_get_store(tgId):
     # print('tgId', tgId)
     db = sqlite3.connect('baza.db')
@@ -177,3 +177,17 @@ def getSavedStoresBeforeEdit(tgId):
     return link
 # print('!! ',getSavedStoresBeforeEdit(3333),'!!!!')
 
+def getFirstStoreUUID(tgId):
+    list = wb_get_store(tgId)
+    return list[0][2]
+
+def getToken(uuid):
+    db = sqlite3.connect('baza.db')
+    t = db.cursor()
+    ifNoExist(t)
+    printTable(t)
+    t.execute(f"SELECT store_token FROM stores WHERE uuid='{uuid}'")
+    ans = t.fetchone()
+    db.commit()
+    db.close()
+    return ans

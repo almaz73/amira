@@ -74,12 +74,9 @@ keyboard = InlineKeyboardMarkup(
 )
 
 
-# link = "d=SHOP_1🌞123,777🌞exist🐷Shop_2🌞12,2,7🌞exist🐷"
-
-
+## метод для получения данных из базы для miniAPP
 def getLinkFromBD(tgId):
     link = BD_methods.getSavedStoresBeforeEdit(tgId)
-    # print("?????  туту link=", link)
     # link = "SHOP_1🌞123,777🌞exist🐷Shop_2🌞12,2,7🌞exist🐷"
     return InlineKeyboardMarkup(
         inline_keyboard=[[
@@ -88,9 +85,8 @@ def getLinkFromBD(tgId):
         ]]
     )
 
-# print('>>>',)
-getLinkFromBD(3333)
 
+## Метод для получения списка магазинова пользователя
 def getOst_stores(tgId):
     list = BD_methods.wb_get_arts(tgId)
     bts=[]
@@ -99,14 +95,15 @@ def getOst_stores(tgId):
         bts.append(InlineKeyboardButton(text=i[0], callback_data='shop:::'+i[0]))
     return InlineKeyboardMarkup(inline_keyboard=[bts])
 
-def getOst_arts(tgId, store):
+## Метод для получения остатков пользователя по uuid магазина
+def getOst_arts(tgId, storeName):
     list = BD_methods.wb_get_arts(tgId)
     bts = []
     for i in list:
-        print('i', i[0])
-        if store == i[0]:
+        print('i', i)
+        if storeName == i[0]:
             for k in i[1].split(','):
-                 bts.append(InlineKeyboardButton(text=k, callback_data=k))
+                bts.append(InlineKeyboardButton(text=k, callback_data=k +'###' + storeName+'###'+i[2]))
     return InlineKeyboardMarkup(inline_keyboard=[bts])
 
 # print(getOst(777))

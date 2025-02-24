@@ -3,15 +3,26 @@
 import json
 import pickle
 from datetime import date
+import wbAnalizFile_methods as bd_file
+
 
 # запоминаем id и время файла аналитики
-def save(val):
-    with open('wb_ost.json', 'w', encoding='utf-8') as f:
+def save(val, current_storeUUID):
+    print('### uuid + date сохраняем, чтобы узнать, устарело или нет')
+
+    print('???? SAVE val=',val)
+    print('????? DAVE current_storeUUID=', current_storeUUID)
+
+    bd_file.save(val, current_storeUUID)
+
+    with open(current_storeUUID+'.json', 'w', encoding='utf-8') as f:
         text = val + ':||:' + str(date.today())
-        saveFile('') # Чистим файл 
-        f.write(text)        
+        print('???? text=', text)
+        saveFile('', None) # Чистим файл
+        f.write(text)
         f.close()
 
+save('1212', '9999999')
 
 # with open('data.pickle', 'wb') as f:
 #      pickle.dump(data, f)
@@ -20,15 +31,20 @@ def save(val):
 #      data_new = pickle.load(f)
 
 # файл аналитики
-def saveFile(val):
-    with open('wb_File.pickle', 'wb') as f:
+def saveFile(val, storeUUID):
+
+    print('### Сохраняем полученный из WИ данные по магазщину')
+
+    with open(storeUUID+'.pickle', 'wb') as f:
         pickle.dump(val, f)  
         f.close()
 
 # файл аналитики
-def readFile():
+def readFile(storeUUID):
+    print('### Пытаемся прочитать, есть ли больщой фа1йл с данными')
     try:
-        with open('wb_File.pickle', 'rb') as f:
+        print(' БУДУ ЧИТАТЬ ФАЙЛ')
+        with open(storeUUID+'.pickle', 'rb') as f:
             list = pickle.load(f)
             f.close()
             return  list
@@ -37,11 +53,14 @@ def readFile():
         return None
     
 # не нужно ли обновлять данные
-def read():
+def read(current_storeUUID):
+    print('#### Проверка нет ли необзодимости обновить большой файл')
+    print('current_storeUUID', current_storeUUID)
     today = date.today()
     try:
-        with open('wb_ost.json', 'r', encoding='utf-8') as f:           
+        with open(current_storeUUID+'.json', 'r', encoding='utf-8') as f:
             datas = f.read().split(':||:')
+            print('? ?? ?? ?? datas', datas)
             f.close()
             if str(today) != datas[1]: return ''
             else : return datas[0]

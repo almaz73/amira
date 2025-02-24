@@ -4,12 +4,13 @@ import apps.saveRead as saveRead
 
 
 
-headers = {'Authorization': f'Bearer {env.API_KEY_ANALITIKA}', 'Content-Type': 'application/json'}
 params = {'locale':'ru', 'groupBySa': True, 'groupBySize': True, 'groupByBrand':False, 'groupBySubject': False, 'groupByNm': False, 'groupByBarcode': False,'filterPics':1, 'filterVolume':1}
 taskId = 0
 
+current_storeUUID = 888
+
 def startOst():
-    print('__startOst__')
+    headers = {'Authorization': f'Bearer {API_KEY_ANALITIKA}', 'Content-Type': 'application/json'}
     url1 = 'https://seller-analytics-api.wildberries.ru/api/v1/warehouse_remains' # Создаем отчет
     response = requests.get(url1, headers=headers, params=params)
     taskId = response.json()['data']['taskId']
@@ -24,13 +25,16 @@ def analizator(spisok, art):
         if spisok['title']=='too many requests': 
             print('too many requests')
             return 'WB: Слишком много запросов'
-        if spisok['detail']=='not found': 
+        if spisok['detail']=='not found':
             print('not Found')
             return 'WB: Файл не найден'
+        if spisok['detail'].find('Указанный файл не существует'):
+            print('not Found')
+            return 'WB: Указанный файл не существует'
     else : 
-        saveRead.saveFile(spisok)
+        saveRead.saveFile(spisok, current_storeUUID)
         print('000art ::: ', art)
-        for i in spisok:  
+        for i in spisok:
             found = False
 
             # поиск по введенному названию артикула
@@ -55,28 +59,32 @@ def analizator(spisok, art):
 
 
 def getOst(taskId, art):
-    file = saveRead.readFile()
+    file = saveRead.readFile(current_storeUUID)
     if file:  
         return analizator(file, art)
-    else:    
+    else:
+        headers = {'Authorization': f'Bearer {API_KEY_ANALITIKA}', 'Content-Type': 'application/json'}
         url3 = f'https://seller-analytics-api.wildberries.ru/api/v1/warehouse_remains/tasks/{taskId}/download'
-
-        print('__startOst222222__')
-
         response2 = requests.get(url3, headers=headers)
         newfile = response2.json()
-        return analizator(newfile, art)   
+        return analizator(newfile, art)
 
 
 def getTaskId():    
     taskId = startOst()
-    saveRead.save(taskId)
+    saveRead.save(taskId, current_storeUUID)
     print('Создан новый файл анализа')
     return 'Создан новый файл анализа'
-    
 
-def getAnaliz(txt):
-    taskId = saveRead.read()
+
+
+def getAnaliz(txt, UUID, token):
+    global current_storeUUID
+    global API_KEY_ANALITIKA
+    API_KEY_ANALITIKA = token
+    current_storeUUID = UUID
+
+    taskId = saveRead.read(current_storeUUID)
     if taskId and txt != '0':
         print('БУДУ анализировать')
         return getOst(taskId, txt)        
