@@ -16,7 +16,7 @@ def startOst():
     taskId = response.json()['data']['taskId']
     return taskId
 
-def analizator(spisok, art):
+def analizator(spisok, art, uuid):
     # lovaly_art = [ '262','382','463','542','567','755']
 
     danger =''
@@ -31,7 +31,7 @@ def analizator(spisok, art):
             return 'WB: Файл не найден'
     else :
         # saveRead.saveFile(spisok)
-        uuid = 'LINK_838383_9999'
+        # uuid = 'LINK_838383_9999'
         saveReadInBaza.wb_save_file(spisok, uuid)
         for i in spisok:
             found = False
@@ -56,41 +56,44 @@ def analizator(spisok, art):
     return danger
 
 
-def getOst(taskId, art):
+def getOst(taskId, art, uuid):
     # file = saveRead.readFile()
-    uuid = 'LINK_838383_9999'
+    # uuid = 'LINK_838383_9999'
     file = saveReadInBaza.wb_read_file(uuid)
     print('<<<<>>>>>file=', file)
     if file:
-        return analizator(file, art)
+        return analizator(file, art, uuid)
     else:    
         url3 = f'https://seller-analytics-api.wildberries.ru/api/v1/warehouse_remains/tasks/{taskId}/download'
         response2 = requests.get(url3, headers=headers)
         newfile = response2.json()
-        return analizator(newfile, art)
+        return analizator(newfile, art, uuid)
 
 
-def getTaskId():    
+def getTaskId(uuid):
     taskId = startOst()
     # saveRead.save(taskId)
-    uuid = 'LINK_838383_9999'
+    # uuid = 'LINK_838383_9999'
     saveReadInBaza.wb_save_Link(taskId, uuid)
     print('Создана новая ссылка на файл анализа')
     return 'Создана новая ссылка на файл анализа'
     
 
-def getAnaliz(txt):
-    # taskId = saveRead.read()
-    uuid = 'LINK_838383_9999'
+def getAnaliz(txt, uuid):
+
+    print('!!! uuiduuid', uuid)
+
     taskId = saveReadInBaza.wb_read_Link(uuid)
+
+    print('taskId', taskId)
 
 
     if taskId and txt != '0':
         print('БУДУ анализировать')
-        return getOst(taskId, txt)        
+        return getOst(taskId, txt, uuid)
     else: 
         print('БУДУ создавать ссылку на новый Файл анализа')
-        getTaskId()
+        getTaskId(uuid)
         return 'Создан новый файл отчета.'        
         
 # getAnaliz('')

@@ -79,7 +79,6 @@ keyboard = InlineKeyboardMarkup(
 
 def getLinkFromBD(tgId):
     link = BD_methods.getSavedStoresBeforeEdit(tgId)
-    # print("?????  туту link=", link)
     # link = "SHOP_1🌞123,777🌞exist🐷Shop_2🌞12,2,7🌞exist🐷"
     return InlineKeyboardMarkup(
         inline_keyboard=[[
@@ -89,13 +88,12 @@ def getLinkFromBD(tgId):
     )
 
 # print('>>>',)
-getLinkFromBD(3333)
+# getLinkFromBD(3333)
 
 def getOst_stores(tgId):
     list = BD_methods.wb_get_arts(tgId)
     bts=[]
     for i in list:
-        print('i', i[0])
         bts.append(InlineKeyboardButton(text=i[0], callback_data='shop:::'+i[0]))
     return InlineKeyboardMarkup(inline_keyboard=[bts])
 
@@ -103,18 +101,13 @@ def getOst_arts(tgId, store):
     list = BD_methods.wb_get_arts(tgId)
     bts = []
     for i in list:
-        print('i', i[0])
         if store == i[0]:
             for k in i[1].split(','):
                  bts.append(InlineKeyboardButton(text=k, callback_data=k))
     return InlineKeyboardMarkup(inline_keyboard=[bts])
 
-# print(getOst(777))
 # print(getOst_arts(777, 'SHOP_1'))
 
-# def createOstButtons(keys):
-#     print('keys = ', keys)
-#     return InlineKeyboardMarkup(inline_keyboard=[[bt1, bt2, bt3]])
 
 
 def getTranslateLink(answer):

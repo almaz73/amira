@@ -80,7 +80,7 @@ def get_wb_token(uuid):
 
 
 def wb_save_Link(link, uuid):
-    print('++Добавляется link, uuid', link, uuid)
+    # print('++Добавляется link, uuid', link, uuid)
 
     db = sqlite3.connect('baza.db')
     t = db.cursor()
@@ -100,7 +100,7 @@ def wb_save_Link(link, uuid):
 
 
 def wb_read_Link(uuid):
-    print('-- wb_read_Link uuid', uuid)
+    # print('-- wb_read_Link uuid', uuid)
     db = sqlite3.connect('baza.db')
     t = db.cursor()
     ifNoExistLink(t)
@@ -110,11 +110,11 @@ def wb_read_Link(uuid):
     db.close()
     today = date.today()
 
-    print('=ans=', ans)
+    # print('=ans=', ans)
 
     # if ans: ans = ans[0]
     # today = today - timedelta(days=1)
-    if not ans[0] or str(today) != ans[0][:10]:
+    if not ans or not ans[0] or str(today) != ans[0][:10]:
         print('~~Указанная ссылка на файл не существует')
         return None
     else: return ans[1]
@@ -123,8 +123,8 @@ def wb_read_Link(uuid):
 
 
 def wb_save_file(file, uuid):
-    print('+++ file save len(file), uuid=', len(file), uuid)
-    print('file=', file)
+    # print('+++ file save len(file), uuid=', len(file), uuid)
+    # print('file=', file)
     db = sqlite3.connect('baza.db')
     t = db.cursor()
     ifNoExistFile(t)
@@ -152,7 +152,7 @@ def wb_read_file(uuid):
     if ans: ans = ans[0]
     db.commit()
     db.close()
-    print('ans=', ans)
+    # print('ans=', ans)
     if ans:
         return json.loads(ans)
     else:

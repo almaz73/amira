@@ -35,6 +35,8 @@ url = 'https://supplies-api.wildberries.ru/api/v1/acceptance/coefficients'
 params = {'warehouseIDs': [117986]}  # ID склада, (117986 - Казань)
 
 def getWB(key):
+    # key - ключ магазина env.WB_KEY
+
     headers = {'Authorization': f'Bearer {key}','Content-Type': 'application/json'}
     response = requests.get(url, headers=headers, params=params)
 

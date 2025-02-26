@@ -44,7 +44,7 @@ async def echo_miniApp(message: Message) -> None:
     db.visit(message.from_user.first_name, message.from_user.id) # записываем посетителя
 
     # print('########## message = ', message)  # вся информация о сообщении
-    print(' message.from_user.id',  message.from_user.id)
+    # print(' message.from_user.id',  message.from_user.id)
     # print('== == == message.web_app_data', message.web_app_data)
     # пришло с веб апп
 
@@ -57,8 +57,8 @@ async def echo_miniApp(message: Message) -> None:
         if arrEl[0]:
             stores[ind] = {'name': arrEl[0], 'art': arrEl[1], 'token': arrEl[2]}
 
-    print('Получили из МИНИАПП=',message.web_app_data)
-    print ('stores', stores)
+    # print('Получили из МИНИАПП=',message.web_app_data)
+    # print ('stores', stores)
     db.saveDatasFromMiniApp(message.from_user.id, message.web_app_data.data)
 
 
@@ -70,7 +70,7 @@ async def echo_handler(message: Message) -> None:
 
 
     print('<><><><><><> message.text = ', message.text)
-  
+
 
     # print('message.user.id = ', message.user)
     if message.text == '☸ Wildberies': return await message.answer('Выберите действие', reply_markup=kb.subMenu)
@@ -118,7 +118,7 @@ async def echo_handler(message: Message) -> None:
             else: return await message.answer(ghost.ask(int(message.text)))
         if game>-1: return await message.answer(ghost.start())
         if WB>-1:
-            ans = wb.getWB()        
+            ans = wb.getWB(env.WB_KEY)
             await message.answer(ans)
         elif cit>-1:
             answer = citation.nextCitation()
@@ -128,7 +128,7 @@ async def echo_handler(message: Message) -> None:
         elif ost>-1:
             articulText = message.text[3:]
             if articulText == '0':
-                 wb_analiz.getAnaliz('0')
+                 wb_analiz.getAnaliz('0', currentUUID)
                  await message.answer('Создан новый файл аналитики') 
             elif not articulText:
                 await message.answer(
@@ -137,7 +137,7 @@ async def echo_handler(message: Message) -> None:
                         # reply_markup=kb.keyboard
                 )
             else:
-                ans = wb_analiz.getAnaliz(articulText)
+                ans = wb_analiz.getAnaliz(articulText, currentUUID)
                 await message.answer(ans)                    
         else: await message.send_copy(chat_id=message.chat.id)
     except TypeError:
@@ -145,11 +145,15 @@ async def echo_handler(message: Message) -> None:
 
 
 
-
+# currentUUID = '95bf851b66f647fdbfd2caebdcbdd9f6'
+currentUUID = ''
 
 #, .in_(['262','382','463','542','567', '755'])
 @dp.callback_query(F.data)
-async def process_buttons_press(callback: CallbackQuery):    
+async def process_buttons_press(callback: CallbackQuery):
+    global currentUUID
+    print('callback.data=0=', callback.data)
+
     tgId = callback.from_user.id
     if len(callback.data)>7 and callback.data.find('hop::'):
         await callback.message.edit_text(
@@ -158,7 +162,14 @@ async def process_buttons_press(callback: CallbackQuery):
         )
         return False
     else:
-        ans = wb_analiz.getAnaliz(callback.data)
+        print('>>!>>!>>!callback.data=', callback.data)
+
+        # print('DEBUG ____')
+        # return  False
+
+        # textAndUUID = callback.data.split('###')
+        # currentUUID = textAndUUID[1]
+        ans = wb_analiz.getAnaliz(callback.data, currentUUID)
         await callback.message.edit_text(ans)
         await callback.answer()
 
