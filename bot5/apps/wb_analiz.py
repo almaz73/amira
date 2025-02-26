@@ -9,14 +9,11 @@ headers = {'Authorization': f'Bearer {env.API_KEY_ANALITIKA}', 'Content-Type': '
 params = {'locale':'ru', 'groupBySa': True, 'groupBySize': True, 'groupByBrand':False, 'groupBySubject': False, 'groupByNm': False, 'groupByBarcode': False,'filterPics':1, 'filterVolume':1}
 taskId = 0
 
-# print('!!!!!!!TOKEN = ', saveReadInBaza.get_wb_token('4815535ce8764de4b906d9db50189608'))
 
 def startOst():
-    print('__startOst__')
     url1 = 'https://seller-analytics-api.wildberries.ru/api/v1/warehouse_remains' # Создаем отчет
     response = requests.get(url1, headers=headers, params=params)
     taskId = response.json()['data']['taskId']
-    print('ПОЛУЧИЛИ из ЦИ taskId =', taskId)
     return taskId
 
 def analizator(spisok, art):
@@ -26,21 +23,17 @@ def analizator(spisok, art):
 
 
     if not isinstance(spisok, list):
-        print('111spisok=', spisok)
-
-        if spisok['title']=='too many requests': 
+        if spisok['title']=='too many requests':
             print('too many requests')
             return 'WB: Слишком много запросов'
         if spisok['detail']=='not found': 
             print('not Found')
             return 'WB: Файл не найден'
     else :
-        print('2222spisok=', spisok)
         # saveRead.saveFile(spisok)
         uuid = 'LINK_838383_9999'
         saveReadInBaza.wb_save_file(spisok, uuid)
-        print('000art ::: ', art)
-        for i in spisok:  
+        for i in spisok:
             found = False
 
             # поиск по введенному названию артикула
@@ -59,7 +52,6 @@ def analizator(spisok, art):
                 txt = '▸'+str(i['quantityWarehousesFull']) + ' 👉 '+i['techSize']+ ' 🌻 ' + i['vendorCode'] +'\n' 
                 danger+=txt
 
-    # print('danger:::', danger)
     if not danger: danger=' 👻 Ничего не нейдено'
     return danger
 
@@ -69,18 +61,13 @@ def getOst(taskId, art):
     uuid = 'LINK_838383_9999'
     file = saveReadInBaza.wb_read_file(uuid)
     print('<<<<>>>>>file=', file)
-    if file:  
+    if file:
         return analizator(file, art)
     else:    
         url3 = f'https://seller-analytics-api.wildberries.ru/api/v1/warehouse_remains/tasks/{taskId}/download'
-
-        print('??? taskId', taskId)
-        print('url = ', url3)
-
         response2 = requests.get(url3, headers=headers)
         newfile = response2.json()
-        print('newfile', newfile)
-        return analizator(newfile, art)   
+        return analizator(newfile, art)
 
 
 def getTaskId():    
