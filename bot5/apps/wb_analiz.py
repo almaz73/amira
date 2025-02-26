@@ -10,6 +10,9 @@ params = {'locale':'ru', 'groupBySa': True, 'groupBySize': True, 'groupByBrand':
 taskId = 0
 
 
+def getFirstUUID():
+    return saveReadInBaza.get_first_uuid()
+
 def startOst():
     url1 = 'https://seller-analytics-api.wildberries.ru/api/v1/warehouse_remains' # Создаем отчет
     response = requests.get(url1, headers=headers, params=params)

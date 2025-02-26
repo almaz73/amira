@@ -74,6 +74,18 @@ def get_wb_token(uuid):
     db.close()
     return ans
 
+## чтобы по умолчанию брвть uuid первого магазина
+def get_first_uuid():
+    db = sqlite3.connect('baza.db')
+    t = db.cursor()
+    ifNoExist(t)
+    t.execute(f"SELECT uuid FROM stores")
+    ans = t.fetchone()
+    if ans: ans = ans[0]
+    db.commit()
+    db.close()
+    return ans
+
 
 # print( '>>> ',wb_token('07d341e5efc040eea4a5384109919961'))
 # print('>>', wb_token('98b2ba1e62ed4d31b187d3c4dff3f0fa'))

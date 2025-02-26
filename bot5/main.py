@@ -65,11 +65,13 @@ async def echo_miniApp(message: Message) -> None:
 
 @dp.message()
 async def echo_handler(message: Message) -> None:
+    global currentUUID
     tgId = message.from_user.id
     db.visit(message.from_user.first_name, tgId) # Записываем посетителя
 
 
     print('<><><><><><> message.text = ', message.text)
+    if not currentUUID: currentUUID = getCurrentUUID()
 
 
     # print('message.user.id = ', message.user)
@@ -147,11 +149,20 @@ async def echo_handler(message: Message) -> None:
 
 # currentUUID = '95bf851b66f647fdbfd2caebdcbdd9f6'
 currentUUID = ''
+def getCurrentUUID():
+    global currentUUID
+    if not currentUUID:
+        # Если нет выбранного магазина, выбираем первый в списке
+        return wb_analiz.getFirstUUID()
+
+
+
 
 #, .in_(['262','382','463','542','567', '755'])
 @dp.callback_query(F.data)
 async def process_buttons_press(callback: CallbackQuery):
     global currentUUID
+    if not currentUUID: currentUUID = getCurrentUUID()
     print('callback.data=0=', callback.data)
 
     tgId = callback.from_user.id
