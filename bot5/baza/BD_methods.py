@@ -49,7 +49,7 @@ def getNewUUID():
     return uuid.uuid4().hex
 
 ## создание/редактирование магазинов
-def editOstatki(token, tgId, name, arts, u):
+def editOstatki(token, tgId, name, arts, uuid):
     db=sqlite3.connect('baza.db')
     t=db.cursor()
     ifNoExist(t)
@@ -57,17 +57,17 @@ def editOstatki(token, tgId, name, arts, u):
     if not name:
         name = 'Магазин_'+datetime.now().strftime('%d.%m.%Y %H:%M')
 
-    if not u:
+    if not uuid:
         t.execute(f"""INSERT INTO stores (store_token, tg_id, dtime, store_name, arts, uuid)
                       VALUES(?,?,?,?,?,?)
-                      ON CONFLICT(store_token) DO UPDATE SET 
+                      ON CONFLICT(store_token) DO UPDATE SET
                       store_name=EXCLUDED.store_name,
                       arts=EXCLUDED.arts,
                       dtime=datetime('now')"""
                  , (token, tgId, str(datetime.now()), name, arts, getNewUUID()))
     else:
         t.execute(f"""UPDATE stores SET dtime=?, store_name=?, arts=? 
-                    WHERE uuid=?""", (str(datetime.now()), name, arts, u))
+                    WHERE uuid=?""", (str(datetime.now()), name, arts, uuid))
 
     db.commit()
     db.close()
@@ -136,7 +136,7 @@ def saveDatasFromMiniApp(tgId, datas):
 
     myUuids = [] #получаем все uuid пользователя
     for i in  wb_get_uuid(tgId): myUuids.append(i[0])
-    # print('____ ____datas=', datas)
+
     stores = {}
     arrStores = datas.split('🐷')
     ind = 0
@@ -158,7 +158,9 @@ def saveDatasFromMiniApp(tgId, datas):
             myNewUuids.append(stores[i]['tokenUuid'])
             editOstatki(stores[i]['tokenUuid'], tgId, stores[i]['name'], stores[i]['art'], None)
     ## удаляю
-    # print('НА УДАЛЕНИЕ ', myUuids)
+
+    print('НА УДАЛЕНИЕ ', myUuids)
+    return False
     for i in myUuids:
         if  not myNewUuids.__contains__(i): deleteAllStores(i)
 
@@ -177,3 +179,13 @@ def getSavedStoresBeforeEdit(tgId):
     return link
 # print('!! ',getSavedStoresBeforeEdit(3333),'!!!!')
 
+def getToken(uuid):
+    db = sqlite3.connect('baza.db')
+    t = db.cursor()
+    ifNoExist(t)
+    printTable(t)
+    t.execute(f"SELECT store_token FROM stores WHERE uuid='{uuid}'")
+    ans = t.fetchone()
+    db.commit()
+    db.close()
+    return ans

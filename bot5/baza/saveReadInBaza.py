@@ -164,7 +164,7 @@ def wb_read_file(uuid):
     if ans: ans = ans[0]
     db.commit()
     db.close()
-    # print('ans=', ans)
+    # print('         a n s=', ans[-100])
     if ans:
         return json.loads(ans)
     else:

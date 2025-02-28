@@ -94,7 +94,7 @@ def getOst_stores(tgId):
     list = BD_methods.wb_get_arts(tgId)
     bts=[]
     for i in list:
-        bts.append(InlineKeyboardButton(text=i[0], callback_data='shop:::'+i[0]))
+        bts.append(InlineKeyboardButton(text=i[0], callback_data='shop:::'+i[0]+ ':::' + i[1]+ ':::' + i[2]))
     return InlineKeyboardMarkup(inline_keyboard=[bts])
 
 def getOst_arts(tgId, store):

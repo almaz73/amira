@@ -73,6 +73,9 @@ async def echo_handler(message: Message) -> None:
     print('<><><><><><> message.text = ', message.text)
     if not currentUUID: currentUUID = getCurrentUUID()
 
+    # if message.text == '111':
+    #     lll='m1🌞356,777🌞eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjUwMTIwdjEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc1NDA3ODg2NywiaWQiOiIwMTk0YmI2Ni1kYTRhLTdiMjctODQ0NS0wNDI4M2Y4Y2ZlN2MiLCJpaWQiOjM3ODAyMDk2LCJvaWQiOjgyNjk0NSwicyI6MTA3Mzc0MTgyOCwic2lkIjoiMjc3ZTFmYWItMjI5Ny00NDY0LWJlMmYtNWJkYzAwMTY5YWIyIiwidCI6ZmFsc2UsInVpZCI6Mzc4MDIwOTZ9.7AcXgHYyVYM-Q189tPDATuuZ1ifQoX_LCMfWA3yx0RWl41ThJH9k0wJcxVfY_Mqj3Lc6xtLtfDP82NQfrDyUAw🐷'
+    #     return db.saveDatasFromMiniApp(message.from_user.id, lll)
 
     # print('message.user.id = ', message.user)
     if message.text == '☸ Wildberies': return await message.answer('Выберите действие', reply_markup=kb.subMenu)
@@ -89,7 +92,7 @@ async def echo_handler(message: Message) -> None:
     if message.text == '/love': return await message.answer(kb.iloveYou)
     if message.text == '/ost' or  message.text == '🛒 Остатки':
         store_ids = db.wb_get_store(message.from_user.id) 
-        print('st o r e _ i d s = ', store_ids)
+        # print('    st o r e _ i d s = ', store_ids)
         if not store_ids: return await message.answer('Нет данных по магазинам, необходимо зайти в "Настройки"')
         else: return await message.answer(text='Выбор магазина:',reply_markup=kb.getOst_stores(tgId))
 
@@ -154,6 +157,7 @@ def getCurrentUUID():
     if not currentUUID:
         # Если нет выбранного магазина, выбираем первый в списке
         return wb_analiz.getFirstUUID()
+    else: return currentUUID
 
 
 
@@ -167,19 +171,16 @@ async def process_buttons_press(callback: CallbackQuery):
 
     tgId = callback.from_user.id
     if len(callback.data)>7 and callback.data.find('hop::'):
+        store_split = callback.data.split(':::')
+        currentUUID = store_split[3]
         await callback.message.edit_text(
             text='Выбери или пиши ost463',
-            reply_markup=kb.getOst_arts(tgId, callback.data[7:])
+            reply_markup = kb.getOst_arts(tgId, store_split[1])
         )
         return False
     else:
         print('>>!>>!>>!callback.data=', callback.data)
 
-        # print('DEBUG ____')
-        # return  False
-
-        # textAndUUID = callback.data.split('###')
-        # currentUUID = textAndUUID[1]
         ans = wb_analiz.getAnaliz(callback.data, currentUUID)
         await callback.message.edit_text(ans)
         await callback.answer()

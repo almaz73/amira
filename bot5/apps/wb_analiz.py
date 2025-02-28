@@ -2,10 +2,10 @@ import requests
 import env as env
 import apps.saveRead as saveRead
 from baza import saveReadInBaza
+from baza import BD_methods
 
 
 
-headers = {'Authorization': f'Bearer {env.API_KEY_ANALITIKA}', 'Content-Type': 'application/json'}
 params = {'locale':'ru', 'groupBySa': True, 'groupBySize': True, 'groupByBrand':False, 'groupBySubject': False, 'groupByNm': False, 'groupByBarcode': False,'filterPics':1, 'filterVolume':1}
 taskId = 0
 
@@ -13,7 +13,10 @@ taskId = 0
 def getFirstUUID():
     return saveReadInBaza.get_first_uuid()
 
-def startOst():
+def startOst(uuid):
+    storeToken = BD_methods.getToken(uuid)
+    headers = {'Authorization': f'Bearer {storeToken[0]}', 'Content-Type': 'application/json'}
+
     url1 = 'https://seller-analytics-api.wildberries.ru/api/v1/warehouse_remains' # Создаем отчет
     response = requests.get(url1, headers=headers, params=params)
     taskId = response.json()['data']['taskId']
@@ -58,8 +61,10 @@ def analizator(spisok, art, uuid):
     if not danger: danger=' 👻 Ничего не нейдено'
     return danger
 
-
 def getOst(taskId, art, uuid):
+    storeToken = BD_methods.getToken(uuid)
+    headers = {'Authorization': f'Bearer {storeToken[0]}', 'Content-Type': 'application/json'}
+
     # file = saveRead.readFile()
     # uuid = 'LINK_838383_9999'
     file = saveReadInBaza.wb_read_file(uuid)
@@ -74,7 +79,7 @@ def getOst(taskId, art, uuid):
 
 
 def getTaskId(uuid):
-    taskId = startOst()
+    taskId = startOst(uuid)
     # saveRead.save(taskId)
     # uuid = 'LINK_838383_9999'
     saveReadInBaza.wb_save_Link(taskId, uuid)
@@ -84,7 +89,7 @@ def getTaskId(uuid):
 
 def getAnaliz(txt, uuid):
 
-    print('!!! uuiduuid', uuid)
+    # print('        !!!!!! ТЕКУЩИЙ uuiduuid', uuid)
 
     taskId = saveReadInBaza.wb_read_Link(uuid)
 
